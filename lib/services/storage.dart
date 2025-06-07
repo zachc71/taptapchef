@@ -31,4 +31,11 @@ class StorageService {
     await prefs.setInt(_keyTimestamp, DateTime.now().millisecondsSinceEpoch);
     return newCount;
   }
+
+  /// Clears all saved progress so the game starts fresh.
+  Future<void> clear() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyCount);
+    await prefs.remove(_keyTimestamp);
+  }
 }
