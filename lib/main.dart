@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'models/upgrade.dart';
+import 'widgets/upgrade_panel.dart';
 import 'dart:async';
 
 import 'models/staff.dart';
@@ -29,6 +31,10 @@ class CounterPage extends StatefulWidget {
 
 class _CounterPageState extends State<CounterPage> {
   int count = 0;
+  int coins = 0;
+  int perTap = 1;
+  late List<Upgrade> upgrades;
+
   final Map<StaffType, int> hiredStaff = {};
   late final Timer _timer;
   double _passiveProgress = 0;
@@ -37,6 +43,22 @@ class _CounterPageState extends State<CounterPage> {
   @override
   void initState() {
     super.initState();
+    upgrades = [
+      Upgrade(name: 'Better Stove', cost: 10, effect: 1),
+      Upgrade(name: 'Sous Chef', cost: 50, effect: 2),
+    ];
+  }
+
+  void _purchase(Upgrade upgrade) {
+    if (coins >= upgrade.cost && !upgrade.purchased) {
+      setState(() {
+        coins -= upgrade.cost;
+        perTap += upgrade.effect;
+        upgrade.purchased = true;
+      });
+    }
+  }
+
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tickPassive());
   }
 
@@ -124,10 +146,26 @@ class _CounterPageState extends State<CounterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Tap Tap Chef')),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text('Meals served: $count'),
+            Text('Coins: $coins'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => setState(() {
+                count += perTap;
+                coins += perTap;
+              }),
+              child: Text('Cook (+$perTap)'),
+            ),
+            const SizedBox(height: 24),
+            UpgradePanel(
+              upgrades: upgrades,
+              currency: coins,
+              onPurchase: _purchase,
+
             Text('Meals served: ${game.mealsServed}'),
             Text('Current milestone: ${game.currentTier.name}'),
             if (game.nextTier != null)
