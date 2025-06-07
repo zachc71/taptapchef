@@ -47,6 +47,8 @@ class _CounterPageState extends State<CounterPage> {
     upgrades = [
       Upgrade(name: 'Better Stove', cost: 10, effect: 1),
       Upgrade(name: 'Sous Chef', cost: 50, effect: 2),
+      Upgrade(name: 'Quantum Oven', cost: 250, effect: 5),
+      Upgrade(name: 'Transdimensional Delivery', cost: 1000, effect: 10),
     ];
     _load();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tickPassive());

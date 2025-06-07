@@ -14,10 +14,21 @@ class GameState {
     'Chain Store',
     'Global Brand',
     'Space Empire',
-    'Endgame'
+    'Endgame',
+    'Time Warp Kitchen',
+    'Multiverse Franchise'
   ];
 
-  static const List<int> milestoneGoals = [10, 50, 150, 300, 600, 1000];
+  static const List<int> milestoneGoals = [
+    10,
+    50,
+    150,
+    300,
+    600,
+    1000,
+    2000,
+    5000
+  ];
 
   String get currentMilestone => milestones[milestoneIndex];
 
