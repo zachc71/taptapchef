@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'models/game_state.dart';
 
 void main() => runApp(const MyApp());
 
@@ -22,7 +23,7 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> {
-  int count = 0;
+  final GameState game = GameState();
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +33,13 @@ class _CounterPageState extends State<CounterPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Meals served: $count'),
+            Text('Meals served: ${game.mealsServed}'),
+            Text('Current milestone: ${game.currentTier.name}'),
+            if (game.nextTier != null)
+              Text('Next: ${game.nextTier!.name} at ${game.nextTier!.unlockRequirement} meals'),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => setState(() => count++),
+              onPressed: () => setState(() => game.cookMeal()),
               child: const Text('Cook!'),
             ),
           ],
