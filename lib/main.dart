@@ -266,6 +266,46 @@ class _CounterPageState extends State<CounterPage> {
     );
   }
 
+  Future<void> _resetGame() async {
+    await _storage.clear();
+    setState(() {
+      game.resetProgress();
+      game.prestige.points = 0;
+      coins = 0;
+      perTap = 1;
+      for (final u in upgrades) {
+        u.purchased = false;
+      }
+      hiredStaff.clear();
+      _passiveProgress = 0;
+      _lastMilestoneIndex = 0;
+      _currentTPS = 0;
+    });
+  }
+
+  Future<void> _confirmReset() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset Game?'),
+        content: const Text('Are you sure you want to erase your progress?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      await _resetGame();
+    }
+  }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -287,6 +327,18 @@ class _CounterPageState extends State<CounterPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tap Tap Chef'),
+        leading: PopupMenuButton<String>(
+          icon: const Icon(Icons.menu),
+          onSelected: (value) {
+            if (value == 'reset') _confirmReset();
+          },
+          itemBuilder: (_) => const [
+            PopupMenuItem(
+              value: 'reset',
+              child: Text('Reset Game'),
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: _startRipMode,
