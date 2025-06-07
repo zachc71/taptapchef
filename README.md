@@ -85,3 +85,19 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 6. [ ] First prestige reset loop
 
 ---
+
+## 🚀 Development Setup
+
+This repository now includes a minimal Flutter application. To run it locally:
+
+1. Install the [Flutter SDK](https://docs.flutter.dev/get-started/install).
+2. Fetch dependencies:
+   ```bash
+   flutter pub get
+   ```
+3. Run the app on an attached device or emulator:
+   ```bash
+   flutter run
+   ```
+
+The starter app tracks how many meals you've cooked each time you tap the **Cook!** button.
