@@ -108,6 +108,17 @@ class _CounterPageState extends State<CounterPage> {
   double _ripRotation = 0;
   Timer? _ripTimer;
 
+  // Combo/Frenzy state
+  int _combo = 0;
+  Timer? _comboTimer;
+  static const int _comboMax = 10;
+  static const Duration _comboTimeout = Duration(seconds: 2);
+
+  bool _frenzy = false;
+  Timer? _frenzyTimer;
+  Offset _frenzyOffset = Offset.zero;
+  Color _frenzyColor = Colors.transparent;
+
   @override
   void initState() {
     super.initState();
@@ -130,11 +141,12 @@ class _CounterPageState extends State<CounterPage> {
   }
 
   Future<void> _cook() async {
+    _incrementCombo();
     setState(() {
       for (int i = 0; i < perTap; i++) {
         game.cook();
       }
-      coins += perTap;
+      coins += perTap * _currentMultiplier;
     });
     _checkMilestone();
     await _storage.saveGame(game.mealsServed);
@@ -212,6 +224,48 @@ class _CounterPageState extends State<CounterPage> {
       rand.nextInt(256),
       rand.nextInt(256),
     );
+  }
+
+  int get _currentMultiplier => _frenzy ? 5 : 1 + (_combo ~/ 2);
+
+  void _incrementCombo() {
+    _comboTimer?.cancel();
+    _comboTimer = Timer(_comboTimeout, () {
+      setState(() => _combo = 0);
+    });
+    setState(() {
+      if (_combo < _comboMax) {
+        _combo += 1;
+        if (_combo >= _comboMax) _startFrenzyMode();
+      }
+    });
+  }
+
+  void _startFrenzyMode() {
+    if (_frenzy) return;
+    setState(() {
+      _frenzy = true;
+      _combo = _comboMax;
+    });
+    _frenzyTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      setState(() {
+        _frenzyOffset = Offset(
+          Random().nextDouble() * 10 - 5,
+          Random().nextDouble() * 10 - 5,
+        );
+        _frenzyColor = _randomColor();
+      });
+    });
+    Timer(const Duration(seconds: 5), () {
+      _frenzyTimer?.cancel();
+      _frenzyTimer = null;
+      setState(() {
+        _frenzy = false;
+        _combo = 0;
+        _frenzyOffset = Offset.zero;
+        _frenzyColor = Colors.transparent;
+      });
+    });
   }
 
   void _startRipMode() {
@@ -346,11 +400,13 @@ class _CounterPageState extends State<CounterPage> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+      body: Transform.translate(
+        offset: _frenzyOffset,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Meals served: ${game.mealsServed}'),
@@ -361,6 +417,9 @@ class _CounterPageState extends State<CounterPage> {
                 : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
             Text('Prestige Points: ${game.prestige.points}'),
             Text('Passive taps/s: ${_currentTPS.toStringAsFixed(1)}'),
+            const SizedBox(height: 8),
+            Text('Combo: $_combo  x$_currentMultiplier'),
+            LinearProgressIndicator(value: _combo / _comboMax),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _cook,
@@ -392,6 +451,14 @@ class _CounterPageState extends State<CounterPage> {
           ],
         ),
           ),
+          if (_frenzy)
+            Positioned.fill(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 100),
+                color: _frenzyColor.withOpacity(0.3),
+                child: const SizedBox.expand(),
+              ),
+            ),
           if (_ripMode)
             Positioned.fill(
               child: AnimatedContainer(

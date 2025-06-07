@@ -10,6 +10,8 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 
 ### Basic Loop:
 - **Tap to Cook** – Taps = meals served = cash.
+- **Build Combos** – Rapid taps raise a combo meter for extra earnings.
+- **Frenzy Mode** – Max the meter for a short burst of huge profits.
 - **Upgrade Kitchen** – Faster production, better food.
 - **Hire Staff** – Automate income generation.
 - **Expand Reach** – From food trucks → restaurants → space diners → multiverse cafeterias.
