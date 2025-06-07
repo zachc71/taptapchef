@@ -63,6 +63,8 @@
 | Global Brand | Prestige system, new tech upgrades  | Sushi, Curry, Banh Mi     |
 | Space Empire | Intergalactic cuisine, absurd boosts| Moon cheese, Alien eggs   |
 | Endgame      | Black hole catering, existential AI | “Conceptual hunger”       |
+| Time Warp Kitchen | Temporal upgrades, time-loop menus | Chrono-chili |
+| Multiverse Franchise | Reality-hopping logistics | Schrödinger's soufflé |
 
 ---
 
@@ -74,6 +76,7 @@
 | Staff Tech   | Instant serve, Mood booster, Dual chefs   |
 | Restaurant   | Increase customer cap, Decor bonus        |
 | Prestige     | % earnings bonus, tap cooldowns, unlocks  |
+| Dimensional  | Time loops, multiverse delivery           |
 
 *Upgrade math will use exponential cost scaling + diminishing returns curves.*
 
@@ -159,7 +162,8 @@
 2. Build tap mechanic + base upgrades  
 3. Implement staff automation  
 4. Add simple save/load system  
-5. Structure prestige system  
+5. Structure prestige system
 6. Internal test build
+7. Prototype time-warp and multiverse tiers
 
 ---

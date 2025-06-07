@@ -12,11 +12,12 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 - **Tap to Cook** – Taps = meals served = cash.
 - **Upgrade Kitchen** – Faster production, better food.
 - **Hire Staff** – Automate income generation.
-- **Expand Reach** – From food trucks → restaurants → space diners.
+- **Expand Reach** – From food trucks → restaurants → space diners → multiverse cafeterias.
 - **Prestige** – "Universal Catering Contracts" to reset progress and gain permanent multipliers.
 
 ### Long-Term Progression:
 - **Research Tree** (Post-MVP): Unlock futuristic cooking tech.
+- **Time & Space Upgrades** (Post-MVP): Reach time warp kitchens and multiverse franchises.
 - **Narrative Beats** (Post-MVP): Satirical and existential reflections à la Universal Paperclips.
 - **Cosmetics + Customization** (Post-MVP): Chef skins, themed kitchens, food particles, etc.
 
@@ -81,8 +82,9 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 2. [ ] Upgrade UI & backend model  
 3. [ ] Staff automation layer  
 4. [ ] Idle earning & save/load  
-5. [ ] MVP-ready restaurant progression  
+5. [ ] MVP-ready restaurant progression
 6. [ ] First prestige reset loop
+7. [ ] Prototype time-warp tiers
 
 ---
 
