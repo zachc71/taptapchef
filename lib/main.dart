@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'services/storage.dart';
+import 'models/game_state.dart';
 
 void main() => runApp(const MyApp());
 
@@ -48,6 +49,9 @@ class _CounterPageState extends State<CounterPage> {
     super.dispose();
   }
 
+  final GameState game = GameState();
+ 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,10 +60,13 @@ class _CounterPageState extends State<CounterPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Meals served: $count'),
+            Text('Meals served: ${game.mealsServed}'),
+            Text('Current milestone: ${game.currentTier.name}'),
+            if (game.nextTier != null)
+              Text('Next: ${game.nextTier!.name} at ${game.nextTier!.unlockRequirement} meals'),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: _increment,
+              onPressed: () => setState(() => game.cookMeal()),
               child: const Text('Cook!'),
             ),
           ],
