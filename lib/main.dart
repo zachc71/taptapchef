@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'services/storage.dart';
 import 'models/game_state.dart';
 
 void main() => runApp(const MyApp());
@@ -23,7 +24,33 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> {
+  int count = 0;
+  final _storage = StorageService();
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final loaded = await _storage.loadGame();
+    setState(() => count = loaded);
+  }
+
+  Future<void> _increment() async {
+    setState(() => count++);
+    await _storage.saveGame(count);
+  }
+
+  @override
+  void dispose() {
+    _storage.saveGame(count);
+    super.dispose();
+  }
+
   final GameState game = GameState();
+ 
 
   @override
   Widget build(BuildContext context) {
