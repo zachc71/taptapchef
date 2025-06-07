@@ -1,0 +1,14 @@
+# Flutter generated files
+.dart_tool/
+.packages
+.pub/
+build/
+**/build/
+
+# IDE files
+.idea/
+*.iml
+.DS_Store
+
+# Flutter dependencies
+flutter_*.png
