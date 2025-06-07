@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -102,6 +103,11 @@ class _CounterPageState extends State<CounterPage> {
   double _currentTPS = 0;
   final StorageService _storage = StorageService();
 
+  bool _ripMode = false;
+  Color _ripColor = Colors.transparent;
+  double _ripRotation = 0;
+  Timer? _ripTimer;
+
   @override
   void initState() {
     super.initState();
@@ -198,6 +204,38 @@ class _CounterPageState extends State<CounterPage> {
     }
   }
 
+  Color _randomColor() {
+    final rand = Random();
+    return Color.fromARGB(
+      255,
+      rand.nextInt(256),
+      rand.nextInt(256),
+      rand.nextInt(256),
+    );
+  }
+
+  void _startRipMode() {
+    if (_ripMode) return;
+    setState(() {
+      _ripMode = true;
+      _ripColor = _randomColor();
+      _ripRotation = (Random().nextDouble() - 0.5) * 0.2;
+    });
+    _ripTimer = Timer.periodic(const Duration(milliseconds: 300), (_) {
+      setState(() {
+        _ripColor = _randomColor();
+        _ripRotation = (Random().nextDouble() - 0.5) * 0.2;
+      });
+    });
+    Timer(const Duration(seconds: 10), () {
+      _ripTimer?.cancel();
+      _ripTimer = null;
+      setState(() {
+        _ripMode = false;
+      });
+    });
+  }
+
   void _showHireSheet() {
     showModalBottomSheet(
       context: context,
@@ -231,6 +269,7 @@ class _CounterPageState extends State<CounterPage> {
   @override
   void dispose() {
     _timer.cancel();
+    _ripTimer?.cancel();
     _storage.saveGame(game.mealsServed);
     super.dispose();
   }
@@ -246,10 +285,20 @@ class _CounterPageState extends State<CounterPage> {
         : GameState.milestones[game.milestoneIndex + 1];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Tap Tap Chef')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+      appBar: AppBar(
+        title: const Text('Tap Tap Chef'),
+        actions: [
+          TextButton(
+            onPressed: _startRipMode,
+            child: const Text('Rip a Taco', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Meals served: ${game.mealsServed}'),
@@ -290,6 +339,19 @@ class _CounterPageState extends State<CounterPage> {
             ),
           ],
         ),
+          ),
+          if (_ripMode)
+            Positioned.fill(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                color: _ripColor.withOpacity(0.5),
+                child: Transform.rotate(
+                  angle: _ripRotation,
+                  child: const SizedBox.expand(),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
