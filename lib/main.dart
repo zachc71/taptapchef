@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'models/game_state.dart';
 import 'models/staff.dart';
@@ -133,11 +134,16 @@ class _CounterPageState extends State<CounterPage> {
   }
 
   Future<void> _load() async {
-    final loaded = await _storage.loadGame();
+    final result = await _storage.loadGame(idleMultiplier: 0.0025);
     setState(() {
-      game.mealsServed = loaded;
+      game.mealsServed = result.count;
+      coins += result.earned;
       _lastMilestoneIndex = game.milestoneIndex;
     });
+    if (result.earned > 0) {
+      await _showOfflineEarningsDialog(result.earned);
+      _checkMilestone();
+    }
   }
 
   Future<void> _cook() async {
@@ -288,6 +294,50 @@ class _CounterPageState extends State<CounterPage> {
         _ripMode = false;
       });
     });
+  }
+
+  Future<void> _showOfflineEarningsDialog(int earned) async {
+    SystemSound.play(SystemSoundType.alert);
+    await showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'offline',
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return ScaleTransition(
+          scale: CurvedAnimation(
+            parent: animation,
+            curve: Curves.elasticOut,
+          ),
+          child: AlertDialog(
+            title: const Text('Welcome Back!'),
+            content: Text('You earned $earned coins while you were away.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Nice'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  final doubled = await _watchAd();
+                  if (doubled) {
+                    setState(() => coins += earned);
+                  }
+                  Navigator.pop(context);
+                },
+                child: const Text('Double for Ad'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<bool> _watchAd() async {
+    // Placeholder for rewarded ad integration.
+    await Future.delayed(const Duration(seconds: 2));
+    return true;
   }
 
   void _showHireSheet() {
