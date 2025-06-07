@@ -1,1 +1,87 @@
-# taptapchef
+# 🍳 Tap Tap Chef
+
+A clicker-style mobile game where players build a food empire from a humble street cart to feeding alien civilizations across the galaxy.
+
+Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a simple, addictive tap-and-upgrade loop with an absurdly fun scale of growth—from sizzling burgers to quantum cuisine.
+
+---
+
+## 🎮 Core Gameplay
+
+### Basic Loop:
+- **Tap to Cook** – Taps = meals served = cash.
+- **Upgrade Kitchen** – Faster production, better food.
+- **Hire Staff** – Automate income generation.
+- **Expand Reach** – From food trucks → restaurants → space diners.
+- **Prestige** – "Universal Catering Contracts" to reset progress and gain permanent multipliers.
+
+### Long-Term Progression:
+- **Research Tree** (Post-MVP): Unlock futuristic cooking tech.
+- **Narrative Beats** (Post-MVP): Satirical and existential reflections à la Universal Paperclips.
+- **Cosmetics + Customization** (Post-MVP): Chef skins, themed kitchens, food particles, etc.
+
+---
+
+## 🧪 MVP Features
+
+✅ Core Tap Mechanic  
+✅ Currency System  
+✅ Upgrade UI (e.g., Faster Cooking, Better Meals)  
+✅ Staff Hire (Simple automation toggle)  
+✅ Basic Prestige System  
+✅ Save/Load Game State  
+✅ Idle Earnings (background income)
+
+🚫 No ad integration in MVP  
+🚫 No IAPs (In-App Purchases)  
+🚫 No Research Tree or Story Beats yet  
+🚫 No sound/music yet (optional placeholder OK)
+
+---
+
+## 🖼 Art Style
+
+- Light 3D or illustrated sprites with soft color palettes
+- Minimalist UI with Egg Inc–style bounce and clarity
+- Expressive, humorous character animations (chefs, customers, aliens)
+
+---
+
+## 📱 Tech Stack
+
+- **Flutter** for cross-platform mobile development (iOS & Android)
+- **Provider or Riverpod** for state management
+- **Hive** or **Shared Preferences** for local save data
+- **Custom widget framework** for upgrade panels, tap animations, and progress bars
+- Optional: Flame engine (if visual FX becomes performance-heavy)
+
+---
+
+## 💰 Monetization Strategy (Post-MVP)
+
+- **Rewarded Video Ads** (e.g., instant delivery, time skips)
+- **IAPs for Boosts** (currency packs, chef multipliers)
+- **Cosmetics Store** (skins, themed backgrounds, effects)
+- **VIP Pass System** (premium prestige tree, bonus automation)
+
+---
+
+## 🔧 Dev Guidelines
+
+- Keep tap interactions tight, responsive, and satisfying
+- Use dummy data for upgrades & income curves during MVP
+- Prioritize performance on mid-tier mobile devices
+- Maintain modular code for scalability (kitchen systems, UI panels, etc.)
+
+---
+
+## 🛠 Sprint Priorities
+
+1. [ ] Tap-to-cook logic  
+2. [ ] Upgrade UI & backend model  
+3. [ ] Staff automation layer  
+4. [ ] Idle earning & save/load  
+5. [ ] MVP-ready restaurant progression  
+6. [ ] First prestige reset loop
+
+---
