@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'models/upgrade.dart';
 import 'widgets/upgrade_panel.dart';
 import 'dart:async';
@@ -30,6 +31,7 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> {
+  final GameState state = GameState();
   int count = 0;
   int coins = 0;
   int perTap = 1;
@@ -150,6 +152,22 @@ class _CounterPageState extends State<CounterPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            Text('Meals served: ${state.mealsServed}'),
+            Text('Stage: ${state.currentMilestone}'),
+            Text('Prestige Points: ${state.prestige.points}'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => setState(() => state.cook()),
+              child: const Text('Cook!'),
+            ),
+            if (state.atFinalMilestone)
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ElevatedButton(
+                  onPressed: () => setState(() => state.prestigeUp()),
+                  child: Text('Prestige (x${state.prestige.multiplier.toStringAsFixed(1)})'),
+                ),
+              ),
             Text('Meals served: $count'),
             Text('Coins: $coins'),
             const SizedBox(height: 16),
