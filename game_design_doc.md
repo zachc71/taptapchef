@@ -28,7 +28,9 @@
 ### 1. **Tapping & Income System**
 - Every tap = 1 meal served
 - Base cash per tap scales with dish tier
-- Combo multipliers for tap streaks (optional phase 2)
+- **Combo Meter:** rapid tapping builds a meter that multiplies earnings.
+- **Frenzy Mode:** maxing the meter triggers a short burst with screen shake,
+  flashy particles, and a large earnings boost.
 
 ### 2. **Kitchen Upgrades**
 | Upgrade        | Effect                        | Cost Type |
