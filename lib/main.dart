@@ -342,7 +342,7 @@ class _CounterPageState extends State<CounterPage> {
         actions: [
           TextButton(
             onPressed: _startRipMode,
-            child: const Text('Rip a Taco', style: TextStyle(color: Colors.white)),
+            child: const Text('Rip a Joint', style: TextStyle(color: Colors.green)),
           ),
         ],
       ),
