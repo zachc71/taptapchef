@@ -8,6 +8,65 @@ import 'models/upgrade.dart';
 import 'services/storage.dart';
 import 'widgets/upgrade_panel.dart';
 
+const List<String> milestoneArt = [
+  r'''
+  ( )
+ /|_|\\
+ /___\\
+  ''',
+  r'''
+  |~~~~|
+  |DNR |
+  |____|
+  ''',
+  r'''
+   _____
+  |[ ] |
+  |[ ] |
+  |____|
+  ''',
+  r'''
+  .----.
+ / .--. \\
+| |    | |
+ \\ '--' /
+  `----'
+  ''',
+  r'''
+  .-.
+ (o o)
+  |=|
+ __|__
+/_____\\
+  ''',
+  r'''
+  (X_X)
+   /|\\
+  /_|_\\
+  ''',
+  r'''
+  <\\/>
+  (oo)
+  /||\\
+  ''',
+  r'''
+   *-|-*
+  /o\\
+  \\v/
+  ''',
+];
+
+const List<String> milestoneDialogues = [
+  'Your street cart is sizzling!',
+  'Locals love your diner!',
+  'You just went corporate!',
+  'Your brand spans the globe!',
+  'You rule the stars!',
+  'Is this the end...?',
+  'Time itself bows to your kitchen!',
+  'The multiverse hungers for more!'
+];
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -39,6 +98,8 @@ class _CounterPageState extends State<CounterPage> {
   final Map<StaffType, int> hiredStaff = {};
   late final Timer _timer;
   double _passiveProgress = 0;
+  int _lastMilestoneIndex = 0;
+  double _currentTPS = 0;
   final StorageService _storage = StorageService();
 
   @override
@@ -56,7 +117,10 @@ class _CounterPageState extends State<CounterPage> {
 
   Future<void> _load() async {
     final loaded = await _storage.loadGame();
-    setState(() => game.mealsServed = loaded);
+    setState(() {
+      game.mealsServed = loaded;
+      _lastMilestoneIndex = game.milestoneIndex;
+    });
   }
 
   Future<void> _cook() async {
@@ -66,6 +130,7 @@ class _CounterPageState extends State<CounterPage> {
       }
       coins += perTap;
     });
+    _checkMilestone();
     await _storage.saveGame(game.mealsServed);
   }
 
@@ -87,14 +152,39 @@ class _CounterPageState extends State<CounterPage> {
     });
     _passiveProgress += tapsPerSecond;
     final int whole = _passiveProgress.floor();
-    if (whole > 0) {
-      _passiveProgress -= whole;
-      setState(() {
+    _passiveProgress -= whole;
+    setState(() {
+      _currentTPS = tapsPerSecond;
+      if (whole > 0) {
         for (int i = 0; i < whole; i++) {
           game.cook();
         }
         coins += perTap * whole;
-      });
+      }
+    });
+    _checkMilestone();
+  }
+
+  void _checkMilestone() {
+    if (_lastMilestoneIndex != game.milestoneIndex) {
+      _lastMilestoneIndex = game.milestoneIndex;
+      final art = milestoneArt[game.milestoneIndex];
+      final dialogue = milestoneDialogues[game.milestoneIndex];
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('Milestone: ${game.currentMilestone}'),
+          content: SingleChildScrollView(child: Text(art)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Nice!'),
+            ),
+          ],
+        ),
+      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(dialogue)));
     }
   }
 
@@ -147,15 +237,29 @@ class _CounterPageState extends State<CounterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool finalStage = game.atFinalMilestone;
+    final int goal =
+        finalStage ? 0 : GameState.milestoneGoals[game.milestoneIndex];
+    final double progress = finalStage ? 1 : game.mealsServed / goal;
+    final String nextName = finalStage
+        ? 'Completed'
+        : GameState.milestones[game.milestoneIndex + 1];
+
     return Scaffold(
       appBar: AppBar(title: const Text('Tap Tap Chef')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Meals served: ${game.mealsServed}'),
             Text('Stage: ${game.currentMilestone}'),
+            LinearProgressIndicator(value: progress),
+            Text(finalStage
+                ? 'Final milestone reached'
+                : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
             Text('Prestige Points: ${game.prestige.points}'),
+            Text('Passive taps/s: ${_currentTPS.toStringAsFixed(1)}'),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _cook,
