@@ -41,7 +41,7 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 🚫 No ad integration in MVP  
 🚫 No IAPs (In-App Purchases)  
 🚫 No Research Tree or Story Beats yet  
-✅ Basic sound effects and haptics
+✅ Basic haptic feedback
 
 ---
 
