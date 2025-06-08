@@ -117,7 +117,8 @@ class CounterPage extends StatefulWidget {
   State<CounterPage> createState() => _CounterPageState();
 }
 
-class _CounterPageState extends State<CounterPage> {
+class _CounterPageState extends State<CounterPage>
+    with SingleTickerProviderStateMixin {
   final GameState game = GameState();
 
   int coins = 0;
@@ -149,7 +150,8 @@ class _CounterPageState extends State<CounterPage> {
   static const Duration _comboTimeout = Duration(seconds: 3);
 
   bool _frenzy = false;
-  Timer? _frenzyTimer;
+  late final AnimationController _frenzyController;
+  Timer? _frenzyDurationTimer;
   Offset _frenzyOffset = Offset.zero;
   Color _frenzyColor = Colors.transparent;
 
@@ -160,6 +162,19 @@ class _CounterPageState extends State<CounterPage> {
   @override
   void initState() {
     super.initState();
+    _frenzyController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    )..addListener(() {
+        if (_frenzy) {
+          setState(() {
+            _frenzyOffset = Offset(
+              sin(_frenzyController.value * 2 * pi) * 2,
+              cos(_frenzyController.value * 2 * pi) * 2,
+            );
+          });
+        }
+      });
     upgrades = upgradesForTier(game.milestoneIndex);
     _load();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tickPassive());
@@ -329,22 +344,15 @@ class _CounterPageState extends State<CounterPage> {
   void _startFrenzyMode() {
     if (_frenzy) return;
     _frenzyWarmupTimer?.cancel();
+    _frenzyDurationTimer?.cancel();
     setState(() {
       _frenzy = true;
       _combo = _comboMax;
+      _frenzyColor = Colors.red;
     });
-    _frenzyTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
-      setState(() {
-        _frenzyOffset = Offset(
-          Random().nextDouble() * 10 - 5,
-          Random().nextDouble() * 10 - 5,
-        );
-        _frenzyColor = _randomColor();
-      });
-    });
-    Timer(const Duration(seconds: 5), () {
-      _frenzyTimer?.cancel();
-      _frenzyTimer = null;
+    _frenzyController.repeat();
+    _frenzyDurationTimer = Timer(const Duration(seconds: 5), () {
+      _frenzyController.stop();
       setState(() {
         _frenzy = false;
         _combo = 0;
@@ -358,12 +366,11 @@ class _CounterPageState extends State<CounterPage> {
     if (_ripMode) return;
     setState(() {
       _ripMode = true;
-      _ripColor = _randomColor();
+      _ripColor = Colors.green;
       _ripRotation = (Random().nextDouble() - 0.5) * 0.2;
     });
     _ripTimer = Timer.periodic(const Duration(milliseconds: 300), (_) {
       setState(() {
-        _ripColor = _randomColor();
         _ripRotation = (Random().nextDouble() - 0.5) * 0.2;
       });
     });
@@ -634,6 +641,8 @@ class _CounterPageState extends State<CounterPage> {
   void dispose() {
     _timer.cancel();
     _ripTimer?.cancel();
+    _frenzyDurationTimer?.cancel();
+    _frenzyController.dispose();
     _specialTimer?.cancel();
     _adBoostTimer?.cancel();
     _storage.saveGame(game.mealsServed);
