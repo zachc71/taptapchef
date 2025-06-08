@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'dart:math';
 
@@ -406,6 +408,7 @@ class _CounterPageState extends State<CounterPage> {
                   if (doubled) {
                     setState(() => coins += earned);
                   }
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
                 },
                 child: const Text('Double for Ad'),
@@ -530,7 +533,7 @@ class _CounterPageState extends State<CounterPage> {
                 ],
               ),
             );
-          }).toList(),
+          }),
           ],
         );
       },

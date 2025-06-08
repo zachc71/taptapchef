@@ -6,7 +6,7 @@ class Pulse extends StatefulWidget {
   final Widget child;
   final bool active;
 
-  const Pulse({required this.child, required this.active});
+  const Pulse({super.key, required this.child, required this.active});
 
   @override
   State<Pulse> createState() => _PulseState();
@@ -57,6 +57,7 @@ class _PulseState extends State<Pulse> with SingleTickerProviderStateMixin {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
+                  // ignore: deprecated_member_use
                   color: Colors.yellow.withOpacity(0.6 * _controller.value),
                   blurRadius: glow,
                 ),
@@ -137,7 +138,7 @@ class UpgradePanel extends StatelessWidget {
             ),
           ),
         );
-      }).toList(),
+      }),
     ]);
   }
 }

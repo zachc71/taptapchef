@@ -88,7 +88,7 @@ class Prestige {
         PrestigeUpgrade(
           id: 'quantum_seasoning',
           name: 'Quantum Seasoning',
-          description: 'Unlock the \"Quantum Seasoning\" upgrade.',
+          description: 'Unlock the "Quantum Seasoning" upgrade.',
           cost: 15,
           type: PrestigeUpgradeType.upgradeUnlock,
         ),
