@@ -210,7 +210,7 @@ class GameController extends ChangeNotifier {
       ripRotation = (Random().nextDouble() - 0.5) * 0.2;
       notifyListeners();
     });
-    Timer(const Duration(seconds: 10), () {
+    Timer(const Duration(seconds: 8), () {
       ripTimer?.cancel();
       ripTimer = null;
       ripMode = false;
