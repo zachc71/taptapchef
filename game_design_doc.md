@@ -87,10 +87,10 @@
 
 ## 💸 Monetization Plan
 
-### Free-to-Play (MVP Post-Launch)
+### Free-to-Play
 - Rewarded ads for:
-  - Instant cash
-  - Temporary 2x income
+  - Instant cash payouts
+  - Temporary 2x income (5-minute boost)
   - Rush orders
 
 ### IAPs
@@ -120,7 +120,7 @@
 | Save/load game state           | ✅        |
 | Prestige reset system          | ✅        |
 | 3–4 progression tiers          | ✅        |
-| Monetization (rewarded ads)   | ❌        |
+| Monetization (rewarded ads)   | ✅        |
 | IAP / cosmetics                | ❌        |
 | Sound/Music                    | ❌        |
 | Dialogue/Narration system     | ❌        |
