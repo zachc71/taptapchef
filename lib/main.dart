@@ -21,6 +21,7 @@ import 'widgets/frenzy_overlay.dart';
 import 'widgets/milestone_overlay.dart';
 import 'constants/milestones.dart';
 import 'constants/panels.dart';
+import 'models/game_state.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
 
