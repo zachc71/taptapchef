@@ -281,15 +281,6 @@ class _CounterPageState extends State<CounterPage>
     }
   }
 
-  Color _randomColor() {
-    final rand = Random();
-    return Color.fromARGB(
-      255,
-      rand.nextInt(256),
-      rand.nextInt(256),
-      rand.nextInt(256),
-    );
-  }
 
   void _spawnSpecial() {
     if (_specialVisible) return;
