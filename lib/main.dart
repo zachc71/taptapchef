@@ -398,6 +398,38 @@ class _CounterPageState extends State<CounterPage> {
     );
   }
 
+  void _showPrestigeSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return ListView(
+          children: game.prestige.upgrades.map((upgrade) {
+            final canBuy =
+                game.prestige.points >= upgrade.cost && !upgrade.purchased;
+            return ListTile(
+              title: Text(upgrade.name),
+              subtitle: Text(
+                  '${upgrade.description} - Cost: ${upgrade.cost} PP'),
+              trailing: upgrade.purchased
+                  ? const Icon(Icons.check, color: Colors.green)
+                  : ElevatedButton(
+                      onPressed: canBuy
+                          ? () {
+                              setState(() {
+                                game.prestige.purchase(upgrade.id);
+                              });
+                              Navigator.pop(context);
+                            }
+                          : null,
+                      child: const Text('Buy'),
+                    ),
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
   Future<void> _resetGame() async {
     await _storage.clear();
     setState(() {
@@ -407,6 +439,9 @@ class _CounterPageState extends State<CounterPage> {
       perTap = 1;
       for (final u in upgrades) {
         u.purchased = false;
+      }
+      for (final p in game.prestige.upgrades) {
+        p.purchased = false;
       }
       hiredStaff.clear();
       _passiveProgress = 0;
@@ -495,6 +530,10 @@ class _CounterPageState extends State<CounterPage> {
                 ? 'Final milestone reached'
                 : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
             Text('Prestige Points: ${game.prestige.points}'),
+            TextButton(
+              onPressed: _showPrestigeSheet,
+              child: const Text('Prestige Upgrades'),
+            ),
             Text('Passive taps/s: ${_currentTPS.toStringAsFixed(1)}'),
             const SizedBox(height: 8),
             Text('Combo: $_combo  x$_currentMultiplier'),
