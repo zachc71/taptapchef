@@ -56,7 +56,7 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 ## 📱 Tech Stack
 
 - **Flutter** for cross-platform mobile development (iOS & Android)
-- **Provider or Riverpod** for state management
+- **Riverpod** for state management
 - **Hive** or **Shared Preferences** for local save data
 - **Custom widget framework** for upgrade panels, tap animations, and progress bars
 - Optional: Flame engine (if visual FX becomes performance-heavy)
