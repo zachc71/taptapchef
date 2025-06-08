@@ -62,9 +62,9 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 
 ---
 
-## 💰 Monetization Strategy (Post-MVP)
+## 💰 Monetization Strategy
 
-- **Rewarded Video Ads** (e.g., instant delivery, time skips)
+- **Rewarded Video Ads** – watch an ad to double earnings for 5 minutes or gain a lump-sum bonus
 - **IAPs for Boosts** (currency packs, chef multipliers)
 - **Cosmetics Store** (skins, themed backgrounds, effects)
 - **VIP Pass System** (premium prestige tree, bonus automation)

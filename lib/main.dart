@@ -111,6 +111,11 @@ class _CounterPageState extends State<CounterPage> {
   double _ripRotation = 0;
   Timer? _ripTimer;
 
+  // Rewarded ad boost state
+  bool _adBoostActive = false;
+  int _adBoostSeconds = 0;
+  Timer? _adBoostTimer;
+
   // Combo/Frenzy state
   int _combo = 0;
   Timer? _comboTimer;
@@ -272,7 +277,10 @@ class _CounterPageState extends State<CounterPage> {
     setState(() => coins += taps * 10);
   }
 
-  int get _currentMultiplier => _frenzy ? 5 : 1 + (_combo ~/ 2);
+  int get _currentMultiplier {
+    final base = _frenzy ? 5 : 1 + (_combo ~/ 2);
+    return _adBoostActive ? base * 2 : base;
+  }
 
   void _incrementCombo() {
     _comboTimer?.cancel();
@@ -336,6 +344,25 @@ class _CounterPageState extends State<CounterPage> {
     });
   }
 
+  void _startAdBoost() {
+    _adBoostTimer?.cancel();
+    setState(() {
+      _adBoostActive = true;
+      _adBoostSeconds = 300;
+    });
+    _adBoostTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_adBoostSeconds <= 1) {
+        timer.cancel();
+        setState(() {
+          _adBoostActive = false;
+          _adBoostSeconds = 0;
+        });
+      } else {
+        setState(() => _adBoostSeconds--);
+      }
+    });
+  }
+
   Future<void> _showOfflineEarningsDialog(int earned) async {
     HapticFeedback.selectionClick();
     SoundService().playUi();
@@ -379,6 +406,39 @@ class _CounterPageState extends State<CounterPage> {
     // Placeholder for rewarded ad integration.
     await Future.delayed(const Duration(seconds: 2));
     return true;
+  }
+
+  Future<void> _showAdRewardSheet() async {
+    HapticFeedback.selectionClick();
+    SoundService().playUi();
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.timer),
+              title: const Text('Double earnings for 5 minutes'),
+              onTap: () async {
+                Navigator.pop(context);
+                final ok = await _watchAd();
+                if (ok) _startAdBoost();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.attach_money),
+              title: const Text('Get 100 coins'),
+              onTap: () async {
+                Navigator.pop(context);
+                final ok = await _watchAd();
+                if (ok) setState(() => coins += 100);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showHireSheet() {
@@ -540,6 +600,7 @@ class _CounterPageState extends State<CounterPage> {
     _timer.cancel();
     _ripTimer?.cancel();
     _specialTimer?.cancel();
+    _adBoostTimer?.cancel();
     _storage.saveGame(game.mealsServed);
     super.dispose();
   }
@@ -599,6 +660,8 @@ class _CounterPageState extends State<CounterPage> {
             Text('Passive taps/s: ${_currentTPS.toStringAsFixed(1)}'),
             const SizedBox(height: 8),
             Text('Combo: $_combo  x$_currentMultiplier'),
+            if (_adBoostActive)
+              Text('Ad boost: ${(_adBoostSeconds ~/ 60).toString().padLeft(2, '0')}:${(_adBoostSeconds % 60).toString().padLeft(2, '0')}'),
             LinearProgressIndicator(value: _combo / _comboMax),
             const SizedBox(height: 16),
             ElevatedButton(
@@ -627,6 +690,11 @@ class _CounterPageState extends State<CounterPage> {
           ElevatedButton(
             onPressed: _showHireSheet,
             child: const Text('Hire Staff'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: _showAdRewardSheet,
+            child: const Text('Watch Ad for Rewards'),
           ),
         ],
       ),
