@@ -702,10 +702,12 @@ class _CounterPageState extends State<CounterPage> {
             ),
           if (_frenzy)
             Positioned.fill(
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 100),
-                color: _frenzyColor.withOpacity(0.3),
-                child: const SizedBox.expand(),
+              child: IgnorePointer(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 100),
+                  color: _frenzyColor.withOpacity(0.3),
+                  child: const SizedBox.expand(),
+                ),
               ),
             ),
           if (_ripMode)
