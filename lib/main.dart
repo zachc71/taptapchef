@@ -309,15 +309,23 @@ class _CounterPageState extends State<CounterPage>
 
   void _incrementCombo() {
     _comboTimer?.cancel();
+    _updateComboAndFrenzy();
     _comboTimer = Timer(_comboTimeout, () {
       _frenzyWarmupTimer?.cancel();
-      setState(() => _combo = 0);
+      setState(() {
+        _combo = (_combo - 2).clamp(0, _comboMax);
+      });
     });
+  }
+
+  void _updateComboAndFrenzy() {
     setState(() {
       if (_combo < _comboMax) {
         _combo += 1;
       }
-      if (_combo >= _comboMax) _startFrenzyWarmup();
+      if (_combo >= _comboMax && !_frenzy) {
+        _startFrenzyWarmup();
+      }
     });
   }
 
