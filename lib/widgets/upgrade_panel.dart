@@ -74,18 +74,24 @@ class UpgradePanel extends StatelessWidget {
   final List<Upgrade> upgrades;
   final int currency;
   final void Function(Upgrade, int) onPurchase;
+  final String title;
 
   const UpgradePanel({
     super.key,
     required this.upgrades,
     required this.currency,
     required this.onPurchase,
+    required this.title,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: upgrades.map((u) {
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 8),
+        ...upgrades.map((u) {
         final bool affordable = currency >= u.cost;
         final bool affordable10 = currency >= u.cost * 10;
         final bool affordable100 = currency >= u.cost * 100;
@@ -132,6 +138,6 @@ class UpgradePanel extends StatelessWidget {
           ),
         );
       }).toList(),
-    );
+    ]);
   }
 }

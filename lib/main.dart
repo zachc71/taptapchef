@@ -71,6 +71,28 @@ const List<String> milestoneDialogues = [
   "The multiverse demands endless specials. Hope you're not out of ideas."
 ];
 
+const List<String> upgradePanelTitles = [
+  'Cart Upgrades',
+  'Diner Renovations',
+  'Corporate Overhauls',
+  'Global Improvements',
+  'Galactic Remodels',
+  'Endgame Upgrades',
+  'Temporal Adjustments',
+  'Multiverse Investments',
+];
+
+const List<String> hirePanelTitles = [
+  'Street Crew',
+  'Diner Staff',
+  'Corporate Recruits',
+  'Global Recruiting',
+  'Cosmic Crew',
+  'Endgame Operatives',
+  'Temporal Staff',
+  'Multiverse Talent',
+];
+
 void main() => runApp(const ProviderScope(child: MyApp()));
 
 class MyApp extends StatelessWidget {
@@ -207,7 +229,9 @@ class _CounterPageState extends State<CounterPage> {
       HapticFeedback.heavyImpact();
       final art = milestoneArt[game.milestoneIndex];
       final dialogue = milestoneDialogues[game.milestoneIndex];
-      upgrades = upgradesForTier(game.milestoneIndex);
+      setState(() {
+        upgrades = upgradesForTier(game.milestoneIndex);
+      });
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -437,8 +461,16 @@ class _CounterPageState extends State<CounterPage> {
       context: context,
       builder: (_) {
         final availableStaff = staffByTier[game.milestoneIndex] ?? {};
+        final title = hirePanelTitles[game.milestoneIndex];
         return ListView(
-          children: availableStaff.keys.map((type) {
+          shrinkWrap: true,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child:
+                  Text(title, style: Theme.of(context).textTheme.titleLarge),
+            ),
+            ...availableStaff.keys.map((type) {
             final staff = availableStaff[type]!;
             final owned = hiredStaff[type] ?? 0;
             final affordable = coins >= staff.cost;
@@ -499,6 +531,7 @@ class _CounterPageState extends State<CounterPage> {
               ),
             );
           }).toList(),
+          ],
         );
       },
     );
@@ -671,6 +704,7 @@ class _CounterPageState extends State<CounterPage> {
               upgrades: upgrades,
               currency: coins,
               onPurchase: _purchase,
+              title: upgradePanelTitles[game.milestoneIndex],
             ),
             const SizedBox(height: 16),
           ElevatedButton(
