@@ -61,14 +61,14 @@ const List<String> milestoneArt = [
 ];
 
 const List<String> milestoneDialogues = [
-  'Your street cart is sizzling!',
-  'Locals love your diner!',
-  'You just went corporate!',
-  'Your brand spans the globe!',
-  'You rule the stars!',
-  'Is this the end...?',
-  'Time itself bows to your kitchen!',
-  'The multiverse hungers for more!'
+  "Street cart fans now chant your menu. This is totally normal.",
+  "Your diner draws crowds - and a new existential crisis.",
+  "Congrats, you're corporate! Please ignore the accountants in the kitchen.",
+  "Entire nations line up. Is this still about food?",
+  "Starships detour just to taste your fries. Space smells like success.",
+  "You've fed the galaxy. Nothing left but existential hunger.",
+  "Time loops around the kitchen. Omelettes now cause deja vu.",
+  "The multiverse demands endless specials. Hope you're not out of ideas."
 ];
 
 void main() => runApp(const MyApp());

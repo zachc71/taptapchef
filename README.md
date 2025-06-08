@@ -18,6 +18,7 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 - **Bulk Buy Options** – Purchase 10, 100, or the max number of upgrades or staff at once.
 - **Expand Reach** – From food trucks → restaurants → space diners → multiverse cafeterias.
 - **Prestige** – "Universal Catering Contracts" to reset progress and gain permanent multipliers.
+- **Milestone Dialogues** – Progression milestones trigger humorous snippets about your growing food empire.
 
 ### Long-Term Progression:
 - **Research Tree** (Post-MVP): Unlock futuristic cooking tech.
