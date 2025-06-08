@@ -9,7 +9,6 @@ import 'models/game_state.dart';
 import 'models/staff.dart';
 import 'models/upgrade.dart';
 import 'services/storage.dart';
-import 'services/sound.dart';
 import 'widgets/upgrade_panel.dart';
 import 'widgets/mini_game_dialog.dart';
 
@@ -163,7 +162,6 @@ class _CounterPageState extends State<CounterPage> {
   Future<void> _cook() async {
     _incrementCombo();
     HapticFeedback.lightImpact();
-    SoundService().playCook();
     setState(() {
       for (int i = 0; i < perTap; i++) {
         game.cook();
@@ -179,7 +177,6 @@ class _CounterPageState extends State<CounterPage> {
     final int totalCost = upgrade.cost * quantity;
     if (coins >= totalCost) {
       HapticFeedback.mediumImpact();
-      SoundService().playCash();
       setState(() {
         coins -= totalCost;
         perTap += upgrade.effect * quantity;
@@ -213,7 +210,6 @@ class _CounterPageState extends State<CounterPage> {
     if (_lastMilestoneIndex != game.milestoneIndex) {
       _lastMilestoneIndex = game.milestoneIndex;
       HapticFeedback.heavyImpact();
-      SoundService().playUi();
       final art = milestoneArt[game.milestoneIndex];
       final dialogue = milestoneDialogues[game.milestoneIndex];
       showDialog(
@@ -239,7 +235,6 @@ class _CounterPageState extends State<CounterPage> {
     final int totalCost = staff.cost * quantity;
     if (coins >= totalCost) {
       HapticFeedback.mediumImpact();
-      SoundService().playCash();
       setState(() {
         coins -= totalCost;
         hiredStaff[type] = (hiredStaff[type] ?? 0) + quantity;
@@ -366,7 +361,6 @@ class _CounterPageState extends State<CounterPage> {
 
   Future<void> _showOfflineEarningsDialog(int earned) async {
     HapticFeedback.selectionClick();
-    SoundService().playUi();
     await showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -411,7 +405,6 @@ class _CounterPageState extends State<CounterPage> {
 
   Future<void> _showAdRewardSheet() async {
     HapticFeedback.selectionClick();
-    SoundService().playUi();
     showModalBottomSheet(
       context: context,
       builder: (_) {
@@ -444,7 +437,6 @@ class _CounterPageState extends State<CounterPage> {
 
   void _showHireSheet() {
     HapticFeedback.selectionClick();
-    SoundService().playUi();
     showModalBottomSheet(
       context: context,
       builder: (_) {
@@ -517,7 +509,6 @@ class _CounterPageState extends State<CounterPage> {
 
   void _showPrestigeSheet() {
     HapticFeedback.selectionClick();
-    SoundService().playUi();
     showModalBottomSheet(
       context: context,
       builder: (_) {
@@ -535,7 +526,6 @@ class _CounterPageState extends State<CounterPage> {
                       onPressed: canBuy
                           ? () {
                               HapticFeedback.mediumImpact();
-                              SoundService().playCash();
                               setState(() {
                                 game.prestige.purchase(upgrade.id);
                               });
@@ -573,7 +563,6 @@ class _CounterPageState extends State<CounterPage> {
 
   Future<void> _confirmReset() async {
     HapticFeedback.selectionClick();
-    SoundService().playUi();
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
