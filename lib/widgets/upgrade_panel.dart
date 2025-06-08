@@ -97,7 +97,7 @@ class UpgradePanel extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(u.name, style: Theme.of(context).textTheme.subtitle1),
+                Text(u.name, style: Theme.of(context).textTheme.titleMedium),
                 Text('Cost: \$${u.cost} - Effect: +${u.effect} per tap - Owned: ${u.owned}'),
                 const SizedBox(height: 8),
                 Row(
