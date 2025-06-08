@@ -45,8 +45,10 @@ class _FrenzyOverlayState extends State<FrenzyOverlay>
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    Colors.red,
-                    Colors.orange,
+                    Color.fromRGBO(255, 0, 0, 0.25),
+                    Color.fromRGBO(255, 69, 0, 0.18),
+                    Color.fromRGBO(255, 140, 0, 0.12),
+                    Color.fromRGBO(255, 165, 0, 0.08),
                     Colors.transparent,
                   ],
                 ),
