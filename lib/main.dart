@@ -144,8 +144,9 @@ class _CounterPageState extends State<CounterPage> {
   // Combo/Frenzy state
   int _combo = 0;
   Timer? _comboTimer;
-  static const int _comboMax = 10;
-  static const Duration _comboTimeout = Duration(seconds: 2);
+  Timer? _frenzyWarmupTimer;
+  static const int _comboMax = 20;
+  static const Duration _comboTimeout = Duration(seconds: 3);
 
   bool _frenzy = false;
   Timer? _frenzyTimer;
@@ -304,18 +305,30 @@ class _CounterPageState extends State<CounterPage> {
   void _incrementCombo() {
     _comboTimer?.cancel();
     _comboTimer = Timer(_comboTimeout, () {
+      _frenzyWarmupTimer?.cancel();
       setState(() => _combo = 0);
     });
     setState(() {
       if (_combo < _comboMax) {
         _combo += 1;
-        if (_combo >= _comboMax) _startFrenzyMode();
+      }
+      if (_combo >= _comboMax) _startFrenzyWarmup();
+    });
+  }
+
+  void _startFrenzyWarmup() {
+    if (_frenzy) return;
+    _frenzyWarmupTimer?.cancel();
+    _frenzyWarmupTimer = Timer(const Duration(seconds: 1), () {
+      if (_combo >= _comboMax && !_frenzy) {
+        _startFrenzyMode();
       }
     });
   }
 
   void _startFrenzyMode() {
     if (_frenzy) return;
+    _frenzyWarmupTimer?.cancel();
     setState(() {
       _frenzy = true;
       _combo = _comboMax;
