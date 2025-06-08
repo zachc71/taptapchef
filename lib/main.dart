@@ -10,6 +10,7 @@ import 'models/staff.dart';
 import 'models/upgrade.dart';
 import 'services/storage.dart';
 import 'widgets/upgrade_panel.dart';
+import 'widgets/staff_panel.dart';
 import 'widgets/mini_game_dialog.dart';
 
 const List<String> milestoneArt = [
@@ -462,76 +463,18 @@ class _CounterPageState extends State<CounterPage> {
       builder: (_) {
         final availableStaff = staffByTier[game.milestoneIndex] ?? {};
         final title = hirePanelTitles[game.milestoneIndex];
-        return ListView(
-          shrinkWrap: true,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child:
-                  Text(title, style: Theme.of(context).textTheme.titleLarge),
-            ),
-            ...availableStaff.keys.map((type) {
-            final staff = availableStaff[type]!;
-            final owned = hiredStaff[type] ?? 0;
-            final affordable = coins >= staff.cost;
-            final affordable10 = coins >= staff.cost * 10;
-            final affordable100 = coins >= staff.cost * 100;
-            final int maxAffordable = coins ~/ staff.cost;
-            return ListTile(
-              title: Text('${staff.name} ($owned hired)'),
-              subtitle: Text(
-                'Cost: ${staff.cost} \u2014 ${staff.tapsPerSecond} taps/s',
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Pulse(
-                    active: affordable,
-                    child: ElevatedButton(
-                      onPressed: affordable
-                          ? () {
-                              Navigator.pop(context);
-                              _hireStaff(type, 1);
-                            }
-                          : null,
-                      child: const Text('1'),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  ElevatedButton(
-                    onPressed: affordable10
-                        ? () {
-                            Navigator.pop(context);
-                            _hireStaff(type, 10);
-                          }
-                        : null,
-                    child: const Text('10'),
-                  ),
-                  const SizedBox(width: 4),
-                  ElevatedButton(
-                    onPressed: affordable100
-                        ? () {
-                            Navigator.pop(context);
-                            _hireStaff(type, 100);
-                          }
-                        : null,
-                    child: const Text('100'),
-                  ),
-                  const SizedBox(width: 4),
-                  ElevatedButton(
-                    onPressed: maxAffordable > 0
-                        ? () {
-                            Navigator.pop(context);
-                            _hireStaff(type, maxAffordable);
-                          }
-                        : null,
-                    child: const Text('MAX'),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-          ],
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: StaffPanel(
+            staff: availableStaff,
+            hired: hiredStaff,
+            coins: coins,
+            onHire: (type, qty) {
+              Navigator.pop(context);
+              _hireStaff(type, qty);
+            },
+            title: title,
+          ),
         );
       },
     );
@@ -683,9 +626,18 @@ class _CounterPageState extends State<CounterPage> {
               Text('Ad boost: ${(_adBoostSeconds ~/ 60).toString().padLeft(2, '0')}:${(_adBoostSeconds % 60).toString().padLeft(2, '0')}'),
             LinearProgressIndicator(value: _combo / _comboMax),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _cook,
-              child: Text('Cook (+$perTap)'),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: _cook,
+                  child: Text('Cook (+$perTap)'),
+                ),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: _showHireSheet,
+                  child: const Text('Hire Staff'),
+                ),
+              ],
             ),
             if (game.atFinalMilestone)
               Padding(
@@ -707,10 +659,6 @@ class _CounterPageState extends State<CounterPage> {
               title: upgradePanelTitles[game.milestoneIndex],
             ),
             const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _showHireSheet,
-            child: const Text('Hire Staff'),
-          ),
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: _showAdRewardSheet,
