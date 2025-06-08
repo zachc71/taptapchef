@@ -15,6 +15,7 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 - **Special Customers** – Occasionally a VIP pops up. Tap them for mini-games or temporary boosts.
 - **Upgrade Kitchen** – Faster production, better food.
 - **Hire Staff** – Automate income generation.
+- **Bulk Buy Options** – Purchase 10, 100, or the max number of upgrades or staff at once.
 - **Expand Reach** – From food trucks → restaurants → space diners → multiverse cafeterias.
 - **Prestige** – "Universal Catering Contracts" to reset progress and gain permanent multipliers.
 

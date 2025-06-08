@@ -168,14 +168,16 @@ class _CounterPageState extends State<CounterPage> {
     await _storage.saveGame(game.mealsServed);
   }
 
-  void _purchase(Upgrade upgrade) {
-    if (coins >= upgrade.cost && !upgrade.purchased) {
+  void _purchase(Upgrade upgrade, int quantity) {
+    if (quantity <= 0) return;
+    final int totalCost = upgrade.cost * quantity;
+    if (coins >= totalCost) {
       HapticFeedback.mediumImpact();
       SoundService().playCash();
       setState(() {
-        coins -= upgrade.cost;
-        perTap += upgrade.effect;
-        upgrade.purchased = true;
+        coins -= totalCost;
+        perTap += upgrade.effect * quantity;
+        upgrade.owned += quantity;
       });
     }
   }
@@ -226,14 +228,15 @@ class _CounterPageState extends State<CounterPage> {
     }
   }
 
-  void _hireStaff(StaffType type) {
+  void _hireStaff(StaffType type, int quantity) {
     final staff = staffOptions[type]!;
-    if (coins >= staff.cost) {
+    final int totalCost = staff.cost * quantity;
+    if (coins >= totalCost) {
       HapticFeedback.mediumImpact();
       SoundService().playCash();
       setState(() {
-        coins -= staff.cost;
-        hiredStaff[type] = (hiredStaff[type] ?? 0) + 1;
+        coins -= totalCost;
+        hiredStaff[type] = (hiredStaff[type] ?? 0) + quantity;
       });
     }
   }
@@ -389,22 +392,60 @@ class _CounterPageState extends State<CounterPage> {
             final staff = staffOptions[type]!;
             final owned = hiredStaff[type] ?? 0;
             final affordable = coins >= staff.cost;
+            final affordable10 = coins >= staff.cost * 10;
+            final affordable100 = coins >= staff.cost * 100;
+            final int maxAffordable = coins ~/ staff.cost;
             return ListTile(
               title: Text('${staff.name} ($owned hired)'),
               subtitle: Text(
                 'Cost: ${staff.cost} \u2014 ${staff.tapsPerSecond} taps/s',
               ),
-              trailing: Pulse(
-                active: affordable,
-                child: ElevatedButton(
-                  onPressed: affordable
-                      ? () {
-                          Navigator.pop(context);
-                          _hireStaff(type);
-                        }
-                      : null,
-                  child: const Text('Hire'),
-                ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Pulse(
+                    active: affordable,
+                    child: ElevatedButton(
+                      onPressed: affordable
+                          ? () {
+                              Navigator.pop(context);
+                              _hireStaff(type, 1);
+                            }
+                          : null,
+                      child: const Text('1'),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  ElevatedButton(
+                    onPressed: affordable10
+                        ? () {
+                            Navigator.pop(context);
+                            _hireStaff(type, 10);
+                          }
+                        : null,
+                    child: const Text('10'),
+                  ),
+                  const SizedBox(width: 4),
+                  ElevatedButton(
+                    onPressed: affordable100
+                        ? () {
+                            Navigator.pop(context);
+                            _hireStaff(type, 100);
+                          }
+                        : null,
+                    child: const Text('100'),
+                  ),
+                  const SizedBox(width: 4),
+                  ElevatedButton(
+                    onPressed: maxAffordable > 0
+                        ? () {
+                            Navigator.pop(context);
+                            _hireStaff(type, maxAffordable);
+                          }
+                        : null,
+                    child: const Text('MAX'),
+                  ),
+                ],
               ),
             );
           }).toList(),
@@ -457,7 +498,7 @@ class _CounterPageState extends State<CounterPage> {
       coins = 0;
       perTap = 1;
       for (final u in upgrades) {
-        u.purchased = false;
+        u.owned = 0;
       }
       for (final p in game.prestige.upgrades) {
         p.purchased = false;
