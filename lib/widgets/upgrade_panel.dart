@@ -90,36 +90,45 @@ class UpgradePanel extends StatelessWidget {
         final bool affordable10 = currency >= u.cost * 10;
         final bool affordable100 = currency >= u.cost * 100;
         final int maxAffordable = currency ~/ u.cost;
-        return ListTile(
-          title: Text(u.name),
-          subtitle: Text(
-              'Cost: \$${u.cost} - Effect: +${u.effect} per tap - Owned: ${u.owned}'),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Pulse(
-                active: affordable,
-                child: ElevatedButton(
-                  onPressed: affordable ? () => onPurchase(u, 1) : null,
-                  child: const Text('1'),
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(u.name, style: Theme.of(context).textTheme.subtitle1),
+                Text('Cost: \$${u.cost} - Effect: +${u.effect} per tap - Owned: ${u.owned}'),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Pulse(
+                      active: affordable,
+                      child: ElevatedButton(
+                        onPressed: affordable ? () => onPurchase(u, 1) : null,
+                        child: const Text('1'),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    ElevatedButton(
+                      onPressed: affordable10 ? () => onPurchase(u, 10) : null,
+                      child: const Text('10'),
+                    ),
+                    const SizedBox(width: 4),
+                    ElevatedButton(
+                      onPressed: affordable100 ? () => onPurchase(u, 100) : null,
+                      child: const Text('100'),
+                    ),
+                    const SizedBox(width: 4),
+                    ElevatedButton(
+                      onPressed: maxAffordable > 0 ? () => onPurchase(u, maxAffordable) : null,
+                      child: const Text('MAX'),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 4),
-              ElevatedButton(
-                onPressed: affordable10 ? () => onPurchase(u, 10) : null,
-                child: const Text('10'),
-              ),
-              const SizedBox(width: 4),
-              ElevatedButton(
-                onPressed: affordable100 ? () => onPurchase(u, 100) : null,
-                child: const Text('100'),
-              ),
-              const SizedBox(width: 4),
-              ElevatedButton(
-                onPressed: maxAffordable > 0 ? () => onPurchase(u, maxAffordable) : null,
-                child: const Text('MAX'),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       }).toList(),
