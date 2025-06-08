@@ -15,6 +15,7 @@ import 'widgets/upgrade_panel.dart';
 import 'widgets/staff_panel.dart';
 import 'widgets/mini_game_dialog.dart';
 import 'widgets/frenzy_overlay.dart';
+import 'widgets/milestone_overlay.dart';
 
 const List<String> milestoneArt = [
   r'''
@@ -251,18 +252,22 @@ class _CounterPageState extends State<CounterPage>
       setState(() {
         upgrades = upgradesForTier(game.milestoneIndex);
       });
-      showDialog(
+      showGeneralDialog(
         context: context,
-        builder: (_) => AlertDialog(
-          title: Text('Milestone: ${game.currentMilestone}'),
-          content: SingleChildScrollView(child: Text(art)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Nice!'),
+        barrierDismissible: false,
+        barrierLabel: 'milestone',
+        barrierColor: Colors.white,
+        transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+            opacity: animation,
+            child: MilestoneOverlay(
+              title: 'Milestone: ${game.currentMilestone}',
+              art: art,
+              onContinue: () => Navigator.pop(context),
             ),
-          ],
-        ),
+          );
+        },
       );
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(dialogue)));
