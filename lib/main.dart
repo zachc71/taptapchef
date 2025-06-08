@@ -7,10 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'models/game_state.dart';
 import 'models/staff.dart';
 import 'models/upgrade.dart';
-import 'services/storage.dart';
+import 'controllers/game_controller.dart';
+import 'providers/game_controller_provider.dart';
+import 'widgets/offline_earnings_dialog.dart';
+import 'widgets/ad_reward_sheet.dart';
+import 'widgets/prestige_sheet.dart';
 import 'widgets/upgrade_panel.dart';
 import 'widgets/staff_panel.dart';
 import 'widgets/mini_game_dialog.dart';
@@ -112,62 +115,29 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class CounterPage extends StatefulWidget {
+class CounterPage extends ConsumerStatefulWidget {
   const CounterPage({super.key});
 
   @override
-  State<CounterPage> createState() => _CounterPageState();
+  ConsumerState<CounterPage> createState() => _CounterPageState();
 }
 
-class _CounterPageState extends State<CounterPage>
+class _CounterPageState extends ConsumerState<CounterPage>
     with SingleTickerProviderStateMixin {
-  final GameState game = GameState();
-
-  int coins = 0;
-  int perTap = 1;
-  late List<Upgrade> upgrades;
-
-  final Map<StaffType, int> hiredStaff = {};
-  late final Timer _timer;
-  double _passiveProgress = 0;
-  int _lastMilestoneIndex = 0;
-  double _currentTPS = 0;
-  final StorageService _storage = StorageService();
-
-  bool _ripMode = false;
-  Color _ripColor = Colors.transparent;
-  double _ripRotation = 0;
-  Timer? _ripTimer;
-
-  // Rewarded ad boost state
-  bool _adBoostActive = false;
-  int _adBoostSeconds = 0;
-  Timer? _adBoostTimer;
-
-  // Combo/Frenzy state
-  int _combo = 0;
-  Timer? _comboTimer;
-  Timer? _frenzyWarmupTimer;
-  static const int _comboMax = 20;
-  static const Duration _comboTimeout = Duration(seconds: 3);
-
-  bool _frenzy = false;
+  late final GameController controller;
   late final AnimationController _frenzyController;
-  Timer? _frenzyDurationTimer;
   Offset _frenzyOffset = Offset.zero;
-
-  // Special customer state
-  Timer? _specialTimer;
-  bool _specialVisible = false;
+  int _prevMilestone = 0;
 
   @override
   void initState() {
     super.initState();
+    controller = ref.read(gameControllerProvider);
     _frenzyController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
     )..addListener(() {
-        if (_frenzy) {
+        if (controller.frenzy) {
           setState(() {
             _frenzyOffset = Offset(
               sin(_frenzyController.value * 2 * pi) * 2,
@@ -176,82 +146,30 @@ class _CounterPageState extends State<CounterPage>
           });
         }
       });
-    upgrades = upgradesForTier(game.milestoneIndex);
-    _load();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tickPassive());
-    _specialTimer =
-        Timer.periodic(const Duration(seconds: 20), (_) => _spawnSpecial());
-  }
-
-  Future<void> _load() async {
-    final result = await _storage.loadGame(idleMultiplier: 0.000833);
-    setState(() {
-      game.mealsServed = result.count;
-      coins += result.earned;
-      _lastMilestoneIndex = game.milestoneIndex;
-    });
-    if (result.earned > 0) {
-      await _showOfflineEarningsDialog(result.earned);
-      _checkMilestone();
-    }
-  }
-
-  Future<void> _cook() async {
-    _incrementCombo();
-    HapticFeedback.lightImpact();
-    setState(() {
-      for (int i = 0; i < perTap; i++) {
-        game.cook();
-      }
-      coins += perTap * _currentMultiplier;
-    });
-    _checkMilestone();
-    await _storage.saveGame(game.mealsServed);
-  }
-
-  void _purchase(Upgrade upgrade, int quantity) {
-    if (quantity <= 0) return;
-    final int totalCost = upgrade.cost * quantity;
-    if (coins >= totalCost) {
-      HapticFeedback.mediumImpact();
-      setState(() {
-        coins -= totalCost;
-        perTap += upgrade.effect * quantity;
-        upgrade.owned += quantity;
-      });
-    }
-  }
-
-  void _tickPassive() {
-    double tapsPerSecond = 0;
-    hiredStaff.forEach((type, qty) {
-      final staff = staffOptions[type]!;
-      tapsPerSecond += staff.tapsPerSecond * qty;
-    });
-    _passiveProgress += tapsPerSecond;
-    final int whole = _passiveProgress.floor();
-    _passiveProgress -= whole;
-    setState(() {
-      _currentTPS = tapsPerSecond;
-      if (whole > 0) {
-        for (int i = 0; i < whole; i++) {
-          game.cook();
-        }
-        coins += perTap * whole;
+    controller.load().then((result) async {
+      if (result.earned > 0) {
+        await _showOfflineEarningsDialog(result.earned);
       }
     });
-    _checkMilestone();
+    controller.start();
+    _prevMilestone = controller.lastMilestoneIndex;
+    controller.addListener(_controllerListener);
   }
 
-  void _checkMilestone() {
-    if (_lastMilestoneIndex != game.milestoneIndex) {
-      _lastMilestoneIndex = game.milestoneIndex;
+  void _controllerListener() {
+    setState(() {
+      if (controller.frenzy && !_frenzyController.isAnimating) {
+        _frenzyController.repeat();
+      } else if (!controller.frenzy && _frenzyController.isAnimating) {
+        _frenzyController.stop();
+        _frenzyOffset = Offset.zero;
+      }
+    });
+    if (_prevMilestone != controller.lastMilestoneIndex) {
+      _prevMilestone = controller.lastMilestoneIndex;
       HapticFeedback.heavyImpact();
-      final art = milestoneArt[game.milestoneIndex];
-      final dialogue = milestoneDialogues[game.milestoneIndex];
-      setState(() {
-        upgrades = upgradesForTier(game.milestoneIndex);
-      });
+      final art = milestoneArt[controller.game.milestoneIndex];
+      final dialogue = milestoneDialogues[controller.game.milestoneIndex];
       showGeneralDialog(
         context: context,
         barrierDismissible: false,
@@ -262,7 +180,7 @@ class _CounterPageState extends State<CounterPage>
           return FadeTransition(
             opacity: animation,
             child: MilestoneOverlay(
-              title: 'Milestone: ${game.currentMilestone}',
+              title: 'Milestone: ${controller.game.currentMilestone}',
               art: art,
               onContinue: () => Navigator.pop(context),
             ),
@@ -275,132 +193,29 @@ class _CounterPageState extends State<CounterPage>
   }
 
   void _hireStaff(StaffType type, int quantity) {
-    final staff = staffOptions[type]!;
-    final int totalCost = staff.cost * quantity;
-    if (coins >= totalCost) {
-      HapticFeedback.mediumImpact();
-      setState(() {
-        coins -= totalCost;
-        hiredStaff[type] = (hiredStaff[type] ?? 0) + quantity;
-      });
-    }
+    HapticFeedback.mediumImpact();
+    controller.hireStaff(type, quantity);
   }
 
-  void _spawnSpecial() {
-    if (_specialVisible) return;
-    if (Random().nextDouble() < 0.5) {
-      setState(() => _specialVisible = true);
-      Timer(const Duration(seconds: 10), () {
-        if (mounted) setState(() => _specialVisible = false);
-      });
-    }
+  void _cook() {
+    HapticFeedback.lightImpact();
+    controller.cook();
   }
 
-  Future<void> _onSpecialTap() async {
-    setState(() => _specialVisible = false);
+  void _purchase(Upgrade upgrade, int quantity) {
+    HapticFeedback.mediumImpact();
+    controller.purchase(upgrade, quantity);
+  }
+
+  void _onSpecialTap() async {
+    controller.hideSpecial();
     final taps = await showDialog<int>(
           context: context,
           barrierDismissible: false,
           builder: (_) => const MiniGameDialog(),
         ) ??
         0;
-    setState(() => coins += taps * 10);
-  }
-
-  int get _currentMultiplier {
-    final base = _frenzy ? 5 : 1 + (_combo ~/ 2);
-    return _adBoostActive ? base * 2 : base;
-  }
-
-  void _incrementCombo() {
-    _comboTimer?.cancel();
-    _updateComboAndFrenzy();
-    _comboTimer = Timer(_comboTimeout, () {
-      _frenzyWarmupTimer?.cancel();
-      setState(() {
-        _combo = (_combo - 2).clamp(0, _comboMax);
-      });
-    });
-  }
-
-  void _updateComboAndFrenzy() {
-    setState(() {
-      if (_combo < _comboMax) {
-        _combo += 1;
-      }
-      if (_combo >= _comboMax && !_frenzy) {
-        _startFrenzyWarmup();
-      }
-    });
-  }
-
-  void _startFrenzyWarmup() {
-    if (_frenzy) return;
-    _frenzyWarmupTimer?.cancel();
-    _frenzyWarmupTimer = Timer(const Duration(seconds: 1), () {
-      if (_combo >= _comboMax && !_frenzy) {
-        _startFrenzyMode();
-      }
-    });
-  }
-
-  void _startFrenzyMode() {
-    if (_frenzy) return;
-    _frenzyWarmupTimer?.cancel();
-    _frenzyDurationTimer?.cancel();
-    setState(() {
-      _frenzy = true;
-      _combo = _comboMax;
-    });
-    _frenzyController.repeat();
-    _frenzyDurationTimer = Timer(const Duration(seconds: 5), () {
-      _frenzyController.stop();
-      setState(() {
-        _frenzy = false;
-        _combo = 0;
-        _frenzyOffset = Offset.zero;
-      });
-    });
-  }
-
-  void _startRipMode() {
-    if (_ripMode) return;
-    setState(() {
-      _ripMode = true;
-      _ripColor = Colors.green;
-      _ripRotation = (Random().nextDouble() - 0.5) * 0.2;
-    });
-    _ripTimer = Timer.periodic(const Duration(milliseconds: 300), (_) {
-      setState(() {
-        _ripRotation = (Random().nextDouble() - 0.5) * 0.2;
-      });
-    });
-    Timer(const Duration(seconds: 10), () {
-      _ripTimer?.cancel();
-      _ripTimer = null;
-      setState(() {
-        _ripMode = false;
-      });
-    });
-  }
-
-  void _startAdBoost() {
-    _adBoostTimer?.cancel();
-    setState(() {
-      _adBoostActive = true;
-      _adBoostSeconds = 300;
-    });
-    _adBoostTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_adBoostSeconds <= 1) {
-        timer.cancel();
-        setState(() {
-          _adBoostActive = false;
-          _adBoostSeconds = 0;
-        });
-      } else {
-        setState(() => _adBoostSeconds--);
-      }
-    });
+    await controller.rewardSpecial(taps);
   }
 
   Future<void> _showOfflineEarningsDialog(int earned) async {
@@ -416,67 +231,36 @@ class _CounterPageState extends State<CounterPage>
             parent: animation,
             curve: Curves.elasticOut,
           ),
-          child: AlertDialog(
-            title: const Text('Welcome Back!'),
-            content: Text('You earned $earned coins while you were away.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Nice'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  final doubled = await _watchAd();
-                  if (doubled) {
-                    setState(() => coins += earned);
-                  }
-                  // ignore: use_build_context_synchronously
-                  Navigator.pop(context);
-                },
-                child: const Text('Double for Ad'),
-              ),
-            ],
+          child: OfflineEarningsDialog(
+            earned: earned,
+            onClose: () => Navigator.pop(context),
+            onDouble: () async {
+              final doubled = await controller.watchAd();
+              if (doubled) controller.addCoins(earned);
+              if (mounted) Navigator.pop(context);
+            },
           ),
         );
       },
     );
   }
 
-  Future<bool> _watchAd() async {
-    // Placeholder for rewarded ad integration.
-    await Future.delayed(const Duration(seconds: 2));
-    return true;
-  }
-
   Future<void> _showAdRewardSheet() async {
     HapticFeedback.selectionClick();
     showModalBottomSheet(
       context: context,
-      builder: (_) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.timer),
-              title: const Text('Double earnings for 5 minutes'),
-              onTap: () async {
-                Navigator.pop(context);
-                final ok = await _watchAd();
-                if (ok) _startAdBoost();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.attach_money),
-              title: const Text('Get 100 coins'),
-              onTap: () async {
-                Navigator.pop(context);
-                final ok = await _watchAd();
-                if (ok) setState(() => coins += 100);
-              },
-            ),
-          ],
-        );
-      },
+      builder: (_) => AdRewardSheet(
+        onFiveMin: () async {
+          Navigator.pop(context);
+          final ok = await controller.watchAd();
+          if (ok) controller.startAdBoost();
+        },
+        onCoins: () async {
+          Navigator.pop(context);
+          final ok = await controller.watchAd();
+          if (ok) controller.addCoins(100);
+        },
+      ),
     );
   }
 
@@ -485,14 +269,15 @@ class _CounterPageState extends State<CounterPage>
     showModalBottomSheet(
       context: context,
       builder: (_) {
-        final availableStaff = staffByTier[game.milestoneIndex] ?? {};
-        final title = hirePanelTitles[game.milestoneIndex];
+        final availableStaff =
+            staffByTier[controller.game.milestoneIndex] ?? {};
+        final title = hirePanelTitles[controller.game.milestoneIndex];
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: StaffPanel(
             staff: availableStaff,
-            hired: hiredStaff,
-            coins: coins,
+            hired: controller.hiredStaff,
+            coins: controller.coins,
             title: title,
             onHire: (type, qty) {
               Navigator.pop(context);
@@ -508,52 +293,20 @@ class _CounterPageState extends State<CounterPage>
     HapticFeedback.selectionClick();
     showModalBottomSheet(
       context: context,
-      builder: (_) {
-        return ListView(
-          children: game.prestige.upgrades.map((upgrade) {
-            final canBuy =
-                game.prestige.points >= upgrade.cost && !upgrade.purchased;
-            return ListTile(
-              title: Text(upgrade.name),
-              subtitle:
-                  Text('${upgrade.description} - Cost: ${upgrade.cost} PP'),
-              trailing: upgrade.purchased
-                  ? const Icon(Icons.check, color: Colors.green)
-                  : ElevatedButton(
-                      onPressed: canBuy
-                          ? () {
-                              HapticFeedback.mediumImpact();
-                              setState(() {
-                                game.prestige.purchase(upgrade.id);
-                              });
-                              Navigator.pop(context);
-                            }
-                          : null,
-                      child: const Text('Buy'),
-                    ),
-            );
-          }).toList(),
-        );
-      },
+      builder: (_) => PrestigeSheet(
+        upgrades: controller.game.prestige.upgrades,
+        points: controller.game.prestige.points,
+        onPurchase: (id) {
+          HapticFeedback.mediumImpact();
+          controller.game.prestige.purchase(id);
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 
   Future<void> _resetGame() async {
-    await _storage.clear();
-    setState(() {
-      game.resetProgress();
-      game.prestige.points = 0;
-      coins = 0;
-      perTap = 1;
-      upgrades = upgradesForTier(game.milestoneIndex);
-      for (final p in game.prestige.upgrades) {
-        p.purchased = false;
-      }
-      hiredStaff.clear();
-      _passiveProgress = 0;
-      _lastMilestoneIndex = 0;
-      _currentTPS = 0;
-    });
+    await controller.resetGame();
   }
 
   Future<void> _confirmReset() async {
@@ -582,25 +335,23 @@ class _CounterPageState extends State<CounterPage>
 
   @override
   void dispose() {
-    _timer.cancel();
-    _ripTimer?.cancel();
-    _frenzyDurationTimer?.cancel();
+    controller.removeListener(_controllerListener);
+    controller.dispose();
     _frenzyController.dispose();
-    _specialTimer?.cancel();
-    _adBoostTimer?.cancel();
-    _storage.saveGame(game.mealsServed);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool finalStage = game.atFinalMilestone;
-    final int goal =
-        finalStage ? 0 : GameState.milestoneGoals[game.milestoneIndex];
-    final double progress = finalStage ? 1 : game.mealsServed / goal;
+    final bool finalStage = controller.game.atFinalMilestone;
+    final int goal = finalStage
+        ? 0
+        : GameState.milestoneGoals[controller.game.milestoneIndex];
+    final double progress =
+        finalStage ? 1 : controller.game.mealsServed / goal;
     final String nextName = finalStage
         ? 'Completed'
-        : GameState.milestones[game.milestoneIndex + 1];
+        : GameState.milestones[controller.game.milestoneIndex + 1];
 
     return Scaffold(
         appBar: AppBar(
@@ -635,30 +386,30 @@ class _CounterPageState extends State<CounterPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Meals served: ${game.mealsServed}'),
-                      Text('Stage: ${game.currentMilestone}'),
+                      Text('Meals served: ${controller.game.mealsServed}'),
+                      Text('Stage: ${controller.game.currentMilestone}'),
                       LinearProgressIndicator(value: progress),
                       Text(finalStage
                           ? 'Final milestone reached'
                           : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
-                      Text('Prestige Points: ${game.prestige.points}'),
+                      Text('Prestige Points: ${controller.game.prestige.points}'),
                       TextButton(
                         onPressed: _showPrestigeSheet,
                         child: const Text('Prestige Upgrades'),
                       ),
-                      Text('Passive taps/s: ${_currentTPS.toStringAsFixed(1)}'),
+                      Text('Passive taps/s: ${controller.currentTPS.toStringAsFixed(1)}'),
                       const SizedBox(height: 8),
-                      Text('Combo: $_combo  x$_currentMultiplier'),
-                      if (_adBoostActive)
+                      Text('Combo: ${controller.combo}  x${controller.currentMultiplier}'),
+                      if (controller.adBoostActive)
                         Text(
-                            'Ad boost: ${(_adBoostSeconds ~/ 60).toString().padLeft(2, '0')}:${(_adBoostSeconds % 60).toString().padLeft(2, '0')}'),
-                      LinearProgressIndicator(value: _combo / _comboMax),
+                            'Ad boost: ${(controller.adBoostSeconds ~/ 60).toString().padLeft(2, '0')}:${(controller.adBoostSeconds % 60).toString().padLeft(2, '0')}'),
+                      LinearProgressIndicator(value: controller.combo / GameController.comboMax),
                       const SizedBox(height: 16),
                       Row(
                         children: [
                           ElevatedButton(
                             onPressed: _cook,
-                            child: Text('Cook (+$perTap)'),
+                            child: Text('Cook (+${controller.perTap})'),
                           ),
                           const Spacer(),
                           ElevatedButton(
@@ -667,24 +418,24 @@ class _CounterPageState extends State<CounterPage>
                           ),
                         ],
                       ),
-                      if (game.atFinalMilestone)
+                      if (controller.game.atFinalMilestone)
                         Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ElevatedButton(
-                            onPressed: () => setState(() => game.prestigeUp()),
+                            onPressed: () => setState(() => controller.game.prestigeUp()),
                             child: Text(
-                              'Prestige (x${game.prestige.multiplier.toStringAsFixed(1)})',
+                              'Prestige (x${controller.game.prestige.multiplier.toStringAsFixed(1)})',
                             ),
                           ),
                         ),
                       const SizedBox(height: 24),
-                      Text('Coins: $coins'),
+                      Text('Coins: ${controller.coins}'),
                       const SizedBox(height: 16),
                       UpgradePanel(
-                        upgrades: upgrades,
-                        currency: coins,
+                        upgrades: controller.upgrades,
+                        currency: controller.coins,
                         onPurchase: _purchase,
-                        title: upgradePanelTitles[game.milestoneIndex],
+                        title: upgradePanelTitles[controller.game.milestoneIndex],
                       ),
                       const SizedBox(height: 16),
                       const SizedBox(height: 8),
@@ -696,7 +447,7 @@ class _CounterPageState extends State<CounterPage>
                   ),
                 ),
               ),
-              if (_specialVisible)
+              if (controller.specialVisible)
                 Positioned(
                   bottom: 80,
                   right: 20,
@@ -706,17 +457,17 @@ class _CounterPageState extends State<CounterPage>
                         const Icon(Icons.star, size: 48, color: Colors.purple),
                   ),
                 ),
-              if (_frenzy)
+              if (controller.frenzy)
                 const Positioned.fill(
                   child: FrenzyOverlay(),
                 ),
-              if (_ripMode)
+              if (controller.ripMode)
                 Positioned.fill(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
-                    color: _ripColor.withOpacity(0.5),
+                    color: controller.ripColor.withOpacity(0.5),
                     child: Transform.rotate(
-                      angle: _ripRotation,
+                      angle: controller.ripRotation,
                       child: const SizedBox.expand(),
                     ),
                   ),
