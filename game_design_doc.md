@@ -28,9 +28,12 @@
 ### 1. **Tapping & Income System**
 - Every tap = 1 meal served
 - Base cash per tap scales with dish tier
-- **Combo Meter:** rapid tapping builds a meter that multiplies earnings.
-- **Frenzy Mode:** maxing the meter triggers a short burst with screen shake,
-  flashy particles, and a large earnings boost.
+- **Combo Meter:** rapid tapping builds a meter that multiplies earnings. Filling
+  the meter now requires **20 taps** (previously 10).
+- **Frenzy Mode:** after the meter is full there is a brief warm-up before a
+  burst begins. During Frenzy a vertical fire overlay slowly rises on screen in
+  place of the old color flashes, alongside the screen shake and big earnings
+  boost.
 - **Special Customers:** rare visitors like food critics or aliens appear; tapping them launches a mini-game or grants a temporary boost.
 
 ### 2. **Kitchen Upgrades**
