@@ -394,14 +394,17 @@ class _CounterPageState extends State<CounterPage> {
               subtitle: Text(
                 'Cost: ${staff.cost} \u2014 ${staff.tapsPerSecond} taps/s',
               ),
-              trailing: ElevatedButton(
-                onPressed: affordable
-                    ? () {
-                        Navigator.pop(context);
-                        _hireStaff(type);
-                      }
-                    : null,
-                child: const Text('Hire'),
+              trailing: Pulse(
+                active: affordable,
+                child: ElevatedButton(
+                  onPressed: affordable
+                      ? () {
+                          Navigator.pop(context);
+                          _hireStaff(type);
+                        }
+                      : null,
+                  child: const Text('Hire'),
+                ),
               ),
             );
           }).toList(),
