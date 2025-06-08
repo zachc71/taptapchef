@@ -12,6 +12,7 @@ import 'models/staff.dart';
 import 'models/upgrade.dart';
 import 'services/storage.dart';
 import 'widgets/upgrade_panel.dart';
+import 'widgets/staff_panel.dart';
 import 'widgets/mini_game_dialog.dart';
 
 const List<String> milestoneArt = [
@@ -686,9 +687,18 @@ class _CounterPageState extends State<CounterPage> {
               Text('Ad boost: ${(_adBoostSeconds ~/ 60).toString().padLeft(2, '0')}:${(_adBoostSeconds % 60).toString().padLeft(2, '0')}'),
             LinearProgressIndicator(value: _combo / _comboMax),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _cook,
-              child: Text('Cook (+$perTap)'),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: _cook,
+                  child: Text('Cook (+$perTap)'),
+                ),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: _showHireSheet,
+                  child: const Text('Hire Staff'),
+                ),
+              ],
             ),
             if (game.atFinalMilestone)
               Padding(
@@ -710,10 +720,6 @@ class _CounterPageState extends State<CounterPage> {
               title: upgradePanelTitles[game.milestoneIndex],
             ),
             const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _showHireSheet,
-            child: const Text('Hire Staff'),
-          ),
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: _showAdRewardSheet,
