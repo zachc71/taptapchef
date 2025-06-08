@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'models/game_state.dart';
 import 'models/staff.dart';
@@ -71,7 +72,7 @@ const List<String> milestoneDialogues = [
   "The multiverse demands endless specials. Hope you're not out of ideas."
 ];
 
-void main() => runApp(const MyApp());
+void main() => runApp(const ProviderScope(child: MyApp()));
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
