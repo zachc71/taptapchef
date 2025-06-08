@@ -106,5 +106,9 @@ This repository now includes a minimal Flutter application. To run it locally:
    ```bash
    flutter run
    ```
+   For an optimized build that installs like a production app, use release mode:
+   ```bash
+   flutter run --release
+   ```
 
 The starter app tracks how many meals you've cooked each time you tap the **Cook!** button.
