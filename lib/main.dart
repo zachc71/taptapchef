@@ -134,12 +134,7 @@ class _CounterPageState extends State<CounterPage> {
   @override
   void initState() {
     super.initState();
-    upgrades = [
-      Upgrade(name: 'Better Stove', cost: 30, effect: 1),
-      Upgrade(name: 'Sous Chef', cost: 150, effect: 2),
-      Upgrade(name: 'Quantum Oven', cost: 750, effect: 5),
-      Upgrade(name: 'Transdimensional Delivery', cost: 3000, effect: 10),
-    ];
+    upgrades = upgradesForTier(game.milestoneIndex);
     _load();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tickPassive());
     _specialTimer =
@@ -212,6 +207,7 @@ class _CounterPageState extends State<CounterPage> {
       HapticFeedback.heavyImpact();
       final art = milestoneArt[game.milestoneIndex];
       final dialogue = milestoneDialogues[game.milestoneIndex];
+      upgrades = upgradesForTier(game.milestoneIndex);
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -440,9 +436,10 @@ class _CounterPageState extends State<CounterPage> {
     showModalBottomSheet(
       context: context,
       builder: (_) {
+        final availableStaff = staffByTier[game.milestoneIndex] ?? {};
         return ListView(
-          children: StaffType.values.map((type) {
-            final staff = staffOptions[type]!;
+          children: availableStaff.keys.map((type) {
+            final staff = availableStaff[type]!;
             final owned = hiredStaff[type] ?? 0;
             final affordable = coins >= staff.cost;
             final affordable10 = coins >= staff.cost * 10;
@@ -548,9 +545,7 @@ class _CounterPageState extends State<CounterPage> {
       game.prestige.points = 0;
       coins = 0;
       perTap = 1;
-      for (final u in upgrades) {
-        u.owned = 0;
-      }
+      upgrades = upgradesForTier(game.milestoneIndex);
       for (final p in game.prestige.upgrades) {
         p.purchased = false;
       }
