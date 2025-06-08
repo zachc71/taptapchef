@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Central game data managed via [ChangeNotifier].
+/// Central game data managed via Riverpod using [ChangeNotifier].
 class GameState extends ChangeNotifier {
   int mealsServed;
   double cash;
@@ -51,4 +51,4 @@ class GameState extends ChangeNotifier {
 /// Global [ChangeNotifierProvider] for accessing and subscribing to
 /// the [GameState] throughout the widget tree.
 final ChangeNotifierProvider<GameState> gameStateProvider =
-    ChangeNotifierProvider<GameState>(create: (_) => GameState());
+    ChangeNotifierProvider<GameState>((ref) => GameState());
