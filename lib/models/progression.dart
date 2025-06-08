@@ -18,27 +18,27 @@ const List<ProgressionTier> progressionTiers = [
   ),
   ProgressionTier(
     name: 'Local Diner',
-    unlockRequirement: 100,
+    unlockRequirement: 300,
     reward: 'Hire staff, new backgrounds',
   ),
   ProgressionTier(
     name: 'Chain Store',
-    unlockRequirement: 1000,
+    unlockRequirement: 3000,
     reward: 'Idle income boosts + ad system',
   ),
   ProgressionTier(
     name: 'Global Brand',
-    unlockRequirement: 5000,
+    unlockRequirement: 15000,
     reward: 'Prestige system, new tech upgrades',
   ),
   ProgressionTier(
     name: 'Space Empire',
-    unlockRequirement: 20000,
+    unlockRequirement: 60000,
     reward: 'Intergalactic cuisine, absurd boosts',
   ),
   ProgressionTier(
     name: 'Endgame',
-    unlockRequirement: 100000,
+    unlockRequirement: 300000,
     reward: 'Black hole catering, existential AI',
   ),
 ];

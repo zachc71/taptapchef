@@ -135,10 +135,10 @@ class _CounterPageState extends State<CounterPage> {
   void initState() {
     super.initState();
     upgrades = [
-      Upgrade(name: 'Better Stove', cost: 10, effect: 1),
-      Upgrade(name: 'Sous Chef', cost: 50, effect: 2),
-      Upgrade(name: 'Quantum Oven', cost: 250, effect: 5),
-      Upgrade(name: 'Transdimensional Delivery', cost: 1000, effect: 10),
+      Upgrade(name: 'Better Stove', cost: 30, effect: 1),
+      Upgrade(name: 'Sous Chef', cost: 150, effect: 2),
+      Upgrade(name: 'Quantum Oven', cost: 750, effect: 5),
+      Upgrade(name: 'Transdimensional Delivery', cost: 3000, effect: 10),
     ];
     _load();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tickPassive());
@@ -147,7 +147,7 @@ class _CounterPageState extends State<CounterPage> {
   }
 
   Future<void> _load() async {
-    final result = await _storage.loadGame(idleMultiplier: 0.0025);
+    final result = await _storage.loadGame(idleMultiplier: 0.000833);
     setState(() {
       game.mealsServed = result.count;
       coins += result.earned;

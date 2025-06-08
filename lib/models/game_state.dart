@@ -20,14 +20,14 @@ class GameState {
   ];
 
   static const List<int> milestoneGoals = [
-    10,
-    50,
+    30,
     150,
-    300,
-    600,
-    1000,
-    2000,
-    5000
+    450,
+    900,
+    1800,
+    3000,
+    6000,
+    15000
   ];
 
   String get currentMilestone => milestones[milestoneIndex];
