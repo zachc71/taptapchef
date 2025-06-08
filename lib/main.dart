@@ -9,6 +9,7 @@ import 'models/staff.dart';
 import 'models/upgrade.dart';
 import 'services/storage.dart';
 import 'widgets/upgrade_panel.dart';
+import 'widgets/mini_game_dialog.dart';
 
 const List<String> milestoneArt = [
   r'''
@@ -120,6 +121,10 @@ class _CounterPageState extends State<CounterPage> {
   Offset _frenzyOffset = Offset.zero;
   Color _frenzyColor = Colors.transparent;
 
+  // Special customer state
+  Timer? _specialTimer;
+  bool _specialVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -131,6 +136,8 @@ class _CounterPageState extends State<CounterPage> {
     ];
     _load();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tickPassive());
+    _specialTimer =
+        Timer.periodic(const Duration(seconds: 20), (_) => _spawnSpecial());
   }
 
   Future<void> _load() async {
@@ -230,6 +237,27 @@ class _CounterPageState extends State<CounterPage> {
       rand.nextInt(256),
       rand.nextInt(256),
     );
+  }
+
+  void _spawnSpecial() {
+    if (_specialVisible) return;
+    if (Random().nextDouble() < 0.5) {
+      setState(() => _specialVisible = true);
+      Timer(const Duration(seconds: 10), () {
+        if (mounted) setState(() => _specialVisible = false);
+      });
+    }
+  }
+
+  Future<void> _onSpecialTap() async {
+    setState(() => _specialVisible = false);
+    final taps = await showDialog<int>(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => const MiniGameDialog(),
+        ) ??
+        0;
+    setState(() => coins += taps * 10);
   }
 
   int get _currentMultiplier => _frenzy ? 5 : 1 + (_combo ~/ 2);
@@ -414,6 +442,7 @@ class _CounterPageState extends State<CounterPage> {
   void dispose() {
     _timer.cancel();
     _ripTimer?.cancel();
+    _specialTimer?.cancel();
     _storage.saveGame(game.mealsServed);
     super.dispose();
   }
@@ -494,13 +523,22 @@ class _CounterPageState extends State<CounterPage> {
               onPurchase: _purchase,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _showHireSheet,
-              child: const Text('Hire Staff'),
-            ),
-          ],
-        ),
+          ElevatedButton(
+            onPressed: _showHireSheet,
+            child: const Text('Hire Staff'),
           ),
+        ],
+      ),
+          ),
+          if (_specialVisible)
+            Positioned(
+              bottom: 80,
+              right: 20,
+              child: GestureDetector(
+                onTap: _onSpecialTap,
+                child: const Icon(Icons.star, size: 48, color: Colors.purple),
+              ),
+            ),
           if (_frenzy)
             Positioned.fill(
               child: AnimatedContainer(

@@ -31,6 +31,7 @@
 - **Combo Meter:** rapid tapping builds a meter that multiplies earnings.
 - **Frenzy Mode:** maxing the meter triggers a short burst with screen shake,
   flashy particles, and a large earnings boost.
+- **Special Customers:** rare visitors like food critics or aliens appear; tapping them launches a mini-game or grants a temporary boost.
 
 ### 2. **Kitchen Upgrades**
 | Upgrade        | Effect                        | Cost Type |
