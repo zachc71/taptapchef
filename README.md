@@ -114,3 +114,13 @@ This repository now includes a minimal Flutter application. To run it locally:
    ```
 
 The starter app tracks how many meals you've cooked each time you tap the **Cook!** button.
+
+## 🧪 Running Tests
+
+To run the automated unit tests, ensure the Flutter SDK is installed and execute:
+
+```bash
+flutter test
+```
+
+This command builds the test environment and runs all suites under `test/`.
