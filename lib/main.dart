@@ -643,7 +643,8 @@ class _CounterPageState extends State<CounterPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Meals served: ${game.mealsServed}'),
@@ -698,7 +699,8 @@ class _CounterPageState extends State<CounterPage> {
           ),
         ],
       ),
-          ),
+    ),
+  ),
           if (_specialVisible)
             Positioned(
               bottom: 80,
