@@ -14,6 +14,7 @@ import 'services/storage.dart';
 import 'widgets/upgrade_panel.dart';
 import 'widgets/staff_panel.dart';
 import 'widgets/mini_game_dialog.dart';
+import 'widgets/frenzy_overlay.dart';
 
 const List<String> milestoneArt = [
   r'''
@@ -153,7 +154,6 @@ class _CounterPageState extends State<CounterPage>
   late final AnimationController _frenzyController;
   Timer? _frenzyDurationTimer;
   Offset _frenzyOffset = Offset.zero;
-  Color _frenzyColor = Colors.transparent;
 
   // Special customer state
   Timer? _specialTimer;
@@ -348,7 +348,6 @@ class _CounterPageState extends State<CounterPage>
     setState(() {
       _frenzy = true;
       _combo = _comboMax;
-      _frenzyColor = Colors.red;
     });
     _frenzyController.repeat();
     _frenzyDurationTimer = Timer(const Duration(seconds: 5), () {
@@ -357,7 +356,6 @@ class _CounterPageState extends State<CounterPage>
         _frenzy = false;
         _combo = 0;
         _frenzyOffset = Offset.zero;
-        _frenzyColor = Colors.transparent;
       });
     });
   }
@@ -761,14 +759,8 @@ class _CounterPageState extends State<CounterPage>
               ),
             ),
           if (_frenzy)
-            Positioned.fill(
-              child: IgnorePointer(
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 100),
-                  color: _frenzyColor.withOpacity(0.3),
-                  child: const SizedBox.expand(),
-                ),
-              ),
+            const Positioned.fill(
+              child: FrenzyOverlay(),
             ),
           if (_ripMode)
             Positioned.fill(
