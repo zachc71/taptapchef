@@ -73,7 +73,7 @@ class _PulseState extends State<Pulse> with SingleTickerProviderStateMixin {
 class UpgradePanel extends StatelessWidget {
   final List<Upgrade> upgrades;
   final int currency;
-  final ValueChanged<Upgrade> onPurchase;
+  final void Function(Upgrade, int) onPurchase;
 
   const UpgradePanel({
     super.key,
@@ -86,18 +86,41 @@ class UpgradePanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: upgrades.map((u) {
+        final bool affordable = currency >= u.cost;
+        final bool affordable10 = currency >= u.cost * 10;
+        final bool affordable100 = currency >= u.cost * 100;
+        final int maxAffordable = currency ~/ u.cost;
         return ListTile(
           title: Text(u.name),
-          subtitle: Text('Cost: \$${u.cost} - Effect: +${u.effect} per tap'),
-          trailing: u.purchased
-              ? const Text('Purchased')
-              : Pulse(
-                  active: currency >= u.cost,
-                  child: ElevatedButton(
-                    onPressed: currency >= u.cost ? () => onPurchase(u) : null,
-                    child: const Text('Buy'),
-                  ),
+          subtitle: Text(
+              'Cost: \$${u.cost} - Effect: +${u.effect} per tap - Owned: ${u.owned}'),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Pulse(
+                active: affordable,
+                child: ElevatedButton(
+                  onPressed: affordable ? () => onPurchase(u, 1) : null,
+                  child: const Text('1'),
                 ),
+              ),
+              const SizedBox(width: 4),
+              ElevatedButton(
+                onPressed: affordable10 ? () => onPurchase(u, 10) : null,
+                child: const Text('10'),
+              ),
+              const SizedBox(width: 4),
+              ElevatedButton(
+                onPressed: affordable100 ? () => onPurchase(u, 100) : null,
+                child: const Text('100'),
+              ),
+              const SizedBox(width: 4),
+              ElevatedButton(
+                onPressed: maxAffordable > 0 ? () => onPurchase(u, maxAffordable) : null,
+                child: const Text('MAX'),
+              ),
+            ],
+          ),
         );
       }).toList(),
     );
