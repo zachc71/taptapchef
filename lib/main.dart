@@ -255,6 +255,11 @@ class _CounterPageState extends ConsumerState<CounterPage>
     }
   }
 
+  void _startRipMode() {
+    HapticFeedback.lightImpact();
+    controller.startRipMode();
+  }
+
   @override
   void dispose() {
     controller.removeListener(_controllerListener);
@@ -387,7 +392,7 @@ class _CounterPageState extends ConsumerState<CounterPage>
                 Positioned.fill(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
-                    color: controller.ripColor.withOpacity(0.5),
+                    color: controller.ripColor.withOpacity(0.3),
                     child: Transform.rotate(
                       angle: controller.ripRotation,
                       child: const SizedBox.expand(),
