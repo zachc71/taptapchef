@@ -44,8 +44,7 @@ class Prestige {
   /// Overall earnings multiplier taking purchased upgrades into account.
   double get multiplier {
     final upgradeBonus = upgrades
-        .where((u) =>
-            u.purchased && u.type == PrestigeUpgradeType.incomeBoost)
+        .where((u) => u.purchased && u.type == PrestigeUpgradeType.incomeBoost)
         .fold<double>(0, (sum, u) => sum + u.value);
     return baseMultiplier + points * increment + upgradeBonus;
   }
@@ -66,8 +65,7 @@ class Prestige {
   }
 
   /// Convenience getter to check if an upgrade is owned.
-  bool hasUpgrade(String id) =>
-      upgrades.any((u) => u.id == id && u.purchased);
+  bool hasUpgrade(String id) => upgrades.any((u) => u.id == id && u.purchased);
 
   static List<PrestigeUpgrade> _defaultUpgrades() => [
         PrestigeUpgrade(

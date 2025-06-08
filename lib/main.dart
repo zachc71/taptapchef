@@ -281,7 +281,6 @@ class _CounterPageState extends State<CounterPage>
     }
   }
 
-
   void _spawnSpecial() {
     if (_specialVisible) return;
     if (Random().nextDouble() < 0.5) {
@@ -503,8 +502,8 @@ class _CounterPageState extends State<CounterPage>
                 game.prestige.points >= upgrade.cost && !upgrade.purchased;
             return ListTile(
               title: Text(upgrade.name),
-              subtitle: Text(
-                  '${upgrade.description} - Cost: ${upgrade.cost} PP'),
+              subtitle:
+                  Text('${upgrade.description} - Cost: ${upgrade.cost} PP'),
               trailing: upgrade.purchased
                   ? const Icon(Icons.check, color: Colors.green)
                   : ElevatedButton(
@@ -591,123 +590,126 @@ class _CounterPageState extends State<CounterPage>
         : GameState.milestones[game.milestoneIndex + 1];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tap Tap Chef'),
-        leading: PopupMenuButton<String>(
-          icon: const Icon(Icons.menu),
-          onSelected: (value) {
-            if (value == 'reset') _confirmReset();
-          },
-          itemBuilder: (_) => const [
-            PopupMenuItem(
-              value: 'reset',
-              child: Text('Reset Game'),
+        appBar: AppBar(
+          title: const Text('Tap Tap Chef'),
+          leading: PopupMenuButton<String>(
+            icon: const Icon(Icons.menu),
+            onSelected: (value) {
+              if (value == 'reset') _confirmReset();
+            },
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: 'reset',
+                child: Text('Reset Game'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: _startRipMode,
+              child: const Text('Rip a Joint',
+                  style: TextStyle(color: Colors.green)),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: _startRipMode,
-            child: const Text('Rip a Joint', style: TextStyle(color: Colors.green)),
-          ),
-        ],
-      ),
-      body: Transform.translate(
-        offset: _frenzyOffset,
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: SingleChildScrollView(
-                child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Meals served: ${game.mealsServed}'),
-            Text('Stage: ${game.currentMilestone}'),
-            LinearProgressIndicator(value: progress),
-            Text(finalStage
-                ? 'Final milestone reached'
-                : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
-            Text('Prestige Points: ${game.prestige.points}'),
-            TextButton(
-              onPressed: _showPrestigeSheet,
-              child: const Text('Prestige Upgrades'),
-            ),
-            Text('Passive taps/s: ${_currentTPS.toStringAsFixed(1)}'),
-            const SizedBox(height: 8),
-            Text('Combo: $_combo  x$_currentMultiplier'),
-            if (_adBoostActive)
-              Text('Ad boost: ${(_adBoostSeconds ~/ 60).toString().padLeft(2, '0')}:${(_adBoostSeconds % 60).toString().padLeft(2, '0')}'),
-            LinearProgressIndicator(value: _combo / _comboMax),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: _cook,
-                  child: Text('Cook (+$perTap)'),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: _showHireSheet,
-                  child: const Text('Hire Staff'),
-                ),
-              ],
-            ),
-            if (game.atFinalMilestone)
+        body: Transform.translate(
+          offset: _frenzyOffset,
+          child: Stack(
+            children: [
               Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: ElevatedButton(
-                  onPressed: () => setState(() => game.prestigeUp()),
-                  child: Text(
-                    'Prestige (x${game.prestige.multiplier.toStringAsFixed(1)})',
+                padding: const EdgeInsets.all(16),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Meals served: ${game.mealsServed}'),
+                      Text('Stage: ${game.currentMilestone}'),
+                      LinearProgressIndicator(value: progress),
+                      Text(finalStage
+                          ? 'Final milestone reached'
+                          : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
+                      Text('Prestige Points: ${game.prestige.points}'),
+                      TextButton(
+                        onPressed: _showPrestigeSheet,
+                        child: const Text('Prestige Upgrades'),
+                      ),
+                      Text('Passive taps/s: ${_currentTPS.toStringAsFixed(1)}'),
+                      const SizedBox(height: 8),
+                      Text('Combo: $_combo  x$_currentMultiplier'),
+                      if (_adBoostActive)
+                        Text(
+                            'Ad boost: ${(_adBoostSeconds ~/ 60).toString().padLeft(2, '0')}:${(_adBoostSeconds % 60).toString().padLeft(2, '0')}'),
+                      LinearProgressIndicator(value: _combo / _comboMax),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: _cook,
+                            child: Text('Cook (+$perTap)'),
+                          ),
+                          const Spacer(),
+                          ElevatedButton(
+                            onPressed: _showHireSheet,
+                            child: const Text('Hire Staff'),
+                          ),
+                        ],
+                      ),
+                      if (game.atFinalMilestone)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: ElevatedButton(
+                            onPressed: () => setState(() => game.prestigeUp()),
+                            child: Text(
+                              'Prestige (x${game.prestige.multiplier.toStringAsFixed(1)})',
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 24),
+                      Text('Coins: $coins'),
+                      const SizedBox(height: 16),
+                      UpgradePanel(
+                        upgrades: upgrades,
+                        currency: coins,
+                        onPurchase: _purchase,
+                        title: upgradePanelTitles[game.milestoneIndex],
+                      ),
+                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: _showAdRewardSheet,
+                        child: const Text('Watch Ad for Rewards'),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            const SizedBox(height: 24),
-            Text('Coins: $coins'),
-            const SizedBox(height: 16),
-            UpgradePanel(
-              upgrades: upgrades,
-              currency: coins,
-              onPurchase: _purchase,
-              title: upgradePanelTitles[game.milestoneIndex],
-            ),
-            const SizedBox(height: 16),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: _showAdRewardSheet,
-            child: const Text('Watch Ad for Rewards'),
-          ),
-        ],
-      ),
-    ),
-  ),
-          if (_specialVisible)
-            Positioned(
-              bottom: 80,
-              right: 20,
-              child: GestureDetector(
-                onTap: _onSpecialTap,
-                child: const Icon(Icons.star, size: 48, color: Colors.purple),
-              ),
-            ),
-          if (_frenzy)
-            const Positioned.fill(
-              child: FrenzyOverlay(),
-            ),
-          if (_ripMode)
-            Positioned.fill(
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                color: _ripColor.withOpacity(0.5),
-                child: Transform.rotate(
-                  angle: _ripRotation,
-                  child: const SizedBox.expand(),
+              if (_specialVisible)
+                Positioned(
+                  bottom: 80,
+                  right: 20,
+                  child: GestureDetector(
+                    onTap: _onSpecialTap,
+                    child:
+                        const Icon(Icons.star, size: 48, color: Colors.purple),
+                  ),
                 ),
-              ),
-            ),
-        ],
-      ),
-    ));
+              if (_frenzy)
+                const Positioned.fill(
+                  child: FrenzyOverlay(),
+                ),
+              if (_ripMode)
+                Positioned.fill(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    color: _ripColor.withOpacity(0.5),
+                    child: Transform.rotate(
+                      angle: _ripRotation,
+                      child: const SizedBox.expand(),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ));
   }
 }

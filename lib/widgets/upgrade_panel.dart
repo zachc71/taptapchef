@@ -87,12 +87,10 @@ class UpgradePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 8),
-        ...upgrades.map((u) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(title, style: Theme.of(context).textTheme.titleLarge),
+      const SizedBox(height: 8),
+      ...upgrades.map((u) {
         final bool affordable = currency >= u.cost;
         final bool affordable10 = currency >= u.cost * 10;
         final bool affordable100 = currency >= u.cost * 100;
@@ -105,7 +103,8 @@ class UpgradePanel extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(u.name, style: Theme.of(context).textTheme.titleMedium),
-                Text('Cost: \$${u.cost} - Effect: +${u.effect} per tap - Owned: ${u.owned}'),
+                Text(
+                    'Cost: \$${u.cost} - Effect: +${u.effect} per tap - Owned: ${u.owned}'),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -124,12 +123,15 @@ class UpgradePanel extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     ElevatedButton(
-                      onPressed: affordable100 ? () => onPurchase(u, 100) : null,
+                      onPressed:
+                          affordable100 ? () => onPurchase(u, 100) : null,
                       child: const Text('100'),
                     ),
                     const SizedBox(width: 4),
                     ElevatedButton(
-                      onPressed: maxAffordable > 0 ? () => onPurchase(u, maxAffordable) : null,
+                      onPressed: maxAffordable > 0
+                          ? () => onPurchase(u, maxAffordable)
+                          : null,
                       child: const Text('MAX'),
                     ),
                   ],

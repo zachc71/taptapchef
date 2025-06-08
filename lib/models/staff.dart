@@ -12,7 +12,8 @@ class Staff {
   final int cost;
   final double tapsPerSecond;
 
-  const Staff({required this.name, required this.cost, required this.tapsPerSecond});
+  const Staff(
+      {required this.name, required this.cost, required this.tapsPerSecond});
 }
 
 // Individual staff definitions so they can be reused across tier maps.

@@ -50,8 +50,7 @@ class StaffPanel extends StatelessWidget {
                       Pulse(
                         active: affordable,
                         child: ElevatedButton(
-                          onPressed:
-                              affordable ? () => onHire(type, 1) : null,
+                          onPressed: affordable ? () => onHire(type, 1) : null,
                           child: const Text('1'),
                         ),
                       ),
@@ -62,7 +61,8 @@ class StaffPanel extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       ElevatedButton(
-                        onPressed: affordable100 ? () => onHire(type, 100) : null,
+                        onPressed:
+                            affordable100 ? () => onHire(type, 100) : null,
                         child: const Text('100'),
                       ),
                       const SizedBox(width: 4),

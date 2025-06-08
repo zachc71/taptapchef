@@ -34,8 +34,7 @@ class _FrenzyOverlayState extends State<FrenzyOverlay>
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
-          final height =
-              MediaQuery.of(context).size.height * _controller.value;
+          final height = MediaQuery.of(context).size.height * _controller.value;
           return Align(
             alignment: Alignment.bottomCenter,
             child: Container(
