@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
+
 import 'prestige.dart';
 
-class GameState {
+class GameState extends ChangeNotifier {
   int mealsServed;
   int milestoneIndex;
   final Prestige prestige;
@@ -40,11 +42,13 @@ class GameState {
       milestoneIndex++;
       mealsServed = 0;
     }
+    notifyListeners();
   }
 
   void resetProgress() {
     mealsServed = 0;
     milestoneIndex = 0;
+    notifyListeners();
   }
 
   void prestigeUp() {
