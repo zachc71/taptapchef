@@ -9,11 +9,11 @@ class Staff {
 }
 
 const Map<StaffType, Staff> staffOptions = {
-  StaffType.assistantChef: Staff(name: 'Assistant Chef', cost: 50, tapsPerSecond: 0.5),
-  StaffType.lineCook: Staff(name: 'Line Cook', cost: 200, tapsPerSecond: 2.0),
-  StaffType.robotChef: Staff(name: 'Robot Chef', cost: 1000, tapsPerSecond: 10.0),
+  StaffType.assistantChef: Staff(name: 'Assistant Chef', cost: 150, tapsPerSecond: 0.5),
+  StaffType.lineCook: Staff(name: 'Line Cook', cost: 600, tapsPerSecond: 2.0),
+  StaffType.robotChef: Staff(name: 'Robot Chef', cost: 3000, tapsPerSecond: 10.0),
   StaffType.timeChef:
-      Staff(name: 'Time Traveler Chef', cost: 5000, tapsPerSecond: 50.0),
+      Staff(name: 'Time Traveler Chef', cost: 15000, tapsPerSecond: 50.0),
   StaffType.dimensionManager:
-      Staff(name: 'Interdimensional Manager', cost: 20000, tapsPerSecond: 200.0),
+      Staff(name: 'Interdimensional Manager', cost: 60000, tapsPerSecond: 200.0),
 };
