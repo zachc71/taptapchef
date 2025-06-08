@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/staff.dart';
-import 'upgrade_panel.dart';
+import 'pulse.dart';
 
 /// A panel for hiring staff using the same layout as [UpgradePanel].
 class StaffPanel extends StatelessWidget {
