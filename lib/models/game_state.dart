@@ -9,13 +9,17 @@ class GameState extends ChangeNotifier {
   int milestoneIndex;
   final Prestige prestige;
   int franchiseTokens = 0;
-  int currentLocationIndex = 0;
+  int locationSetIndex = 0;
   Map<String, int> purchasedPrestigeUpgrades = {};
   List<String> ownedArtifactIds = [];
   List<String?> equippedArtifactIds = [null, null, null];
 
-  FranchiseLocation get currentLocation =>
-      franchiseProgression[currentLocationIndex];
+  int get locationTierIndex =>
+      (milestoneIndex * franchiseTiers.length) ~/ milestones.length;
+
+  FranchiseLocation get currentLocation => franchiseLocationSets[
+          locationSetIndex % franchiseLocationSets.length]
+      [locationTierIndex];
 
   GameState({this.mealsServed = 0, this.milestoneIndex = 0, Prestige? prestige})
       : prestige = prestige ?? Prestige();
@@ -65,8 +69,8 @@ class GameState extends ChangeNotifier {
     if (atFinalMilestone) {
       int tokensEarned = 1 + (mealsServed ~/ 1000);
       franchiseTokens += tokensEarned;
-      currentLocationIndex =
-          (currentLocationIndex + 1) % franchiseProgression.length;
+      locationSetIndex =
+          (locationSetIndex + 1) % franchiseLocationSets.length;
       resetProgress();
     }
   }

@@ -277,8 +277,8 @@ class _CounterPageState extends ConsumerState<CounterPage>
     HapticFeedback.selectionClick();
     final tokens = 1 + (controller.game.mealsServed ~/ 1000);
     final nextIndex =
-        (controller.game.currentLocationIndex + 1) % franchiseProgression.length;
-    final nextName = franchiseProgression[nextIndex].name;
+        (controller.game.locationSetIndex + 1) % franchiseLocationSets.length;
+    final nextName = franchiseLocationSets[nextIndex][0].name;
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(

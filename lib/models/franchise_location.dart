@@ -10,15 +10,32 @@ class FranchiseLocation {
   });
 }
 
-const List<FranchiseLocation> franchiseProgression = [
-  FranchiseLocation(name: 'Nashville', tierName: 'City', artAsset: 'assets/images/nashville.png'),
-  FranchiseLocation(name: 'New York', tierName: 'City', artAsset: 'assets/images/new_york.png'),
-  FranchiseLocation(name: 'Tokyo', tierName: 'City', artAsset: 'assets/images/tokyo.png'),
+const List<String> franchiseTiers = ['City', 'Country', 'Planet'];
 
-  FranchiseLocation(name: 'USA', tierName: 'Country', artAsset: 'assets/images/usa.png'),
-  FranchiseLocation(name: 'Canada', tierName: 'Country', artAsset: 'assets/images/canada.png'),
-  FranchiseLocation(name: 'Japan', tierName: 'Country', artAsset: 'assets/images/japan.png'),
-
-  FranchiseLocation(name: 'Earth', tierName: 'Planet', artAsset: 'assets/images/earth.png'),
-  FranchiseLocation(name: 'Mars', tierName: 'Planet', artAsset: 'assets/images/mars.png'),
+/// Groups of [FranchiseLocation] names that rotate each prestige.
+const List<List<FranchiseLocation>> franchiseLocationSets = [
+  [
+    FranchiseLocation(
+        name: 'Nashville', tierName: 'City', artAsset: 'assets/images/nashville.png'),
+    FranchiseLocation(
+        name: 'USA', tierName: 'Country', artAsset: 'assets/images/usa.png'),
+    FranchiseLocation(
+        name: 'Earth', tierName: 'Planet', artAsset: 'assets/images/earth.png'),
+  ],
+  [
+    FranchiseLocation(
+        name: 'New York', tierName: 'City', artAsset: 'assets/images/new_york.png'),
+    FranchiseLocation(
+        name: 'Canada', tierName: 'Country', artAsset: 'assets/images/canada.png'),
+    FranchiseLocation(
+        name: 'Mars', tierName: 'Planet', artAsset: 'assets/images/mars.png'),
+  ],
+  [
+    FranchiseLocation(
+        name: 'Tokyo', tierName: 'City', artAsset: 'assets/images/tokyo.png'),
+    FranchiseLocation(
+        name: 'Japan', tierName: 'Country', artAsset: 'assets/images/japan.png'),
+    FranchiseLocation(
+        name: 'Venus', tierName: 'Planet', artAsset: 'assets/images/venus.png'),
+  ],
 ];

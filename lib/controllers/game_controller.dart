@@ -271,7 +271,7 @@ class GameController extends ChangeNotifier {
     game.resetProgress();
     game.prestige.points = 0;
     game.franchiseTokens = 0;
-    game.currentLocationIndex = 0;
+    game.locationSetIndex = 0;
     game.purchasedPrestigeUpgrades.clear();
     coins = 0;
     perTap = 1;

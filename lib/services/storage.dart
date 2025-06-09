@@ -12,7 +12,7 @@ class StorageService {
   static const _keyCount = 'count';
   static const _keyTimestamp = 'timestamp';
   static const _keyTokens = 'franchiseTokens';
-  static const _keyLocation = 'currentLocationIndex';
+  static const _keyLocation = 'locationSetIndex';
   static const _keyUpgrades = 'purchasedPrestigeUpgrades';
 
   /// Saves the current count and timestamp to local storage.
@@ -25,7 +25,7 @@ class StorageService {
   Future<void> saveFranchiseData(GameState game) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_keyTokens, game.franchiseTokens);
-    await prefs.setInt(_keyLocation, game.currentLocationIndex);
+    await prefs.setInt(_keyLocation, game.locationSetIndex);
     await prefs.setString(
         _keyUpgrades, jsonEncode(game.purchasedPrestigeUpgrades));
   }
@@ -33,7 +33,7 @@ class StorageService {
   Future<void> loadFranchiseData(GameState game) async {
     final prefs = await SharedPreferences.getInstance();
     game.franchiseTokens = prefs.getInt(_keyTokens) ?? 0;
-    game.currentLocationIndex = prefs.getInt(_keyLocation) ?? 0;
+    game.locationSetIndex = prefs.getInt(_keyLocation) ?? 0;
     final upgradesString = prefs.getString(_keyUpgrades);
     if (upgradesString != null && upgradesString.isNotEmpty) {
       final decoded = jsonDecode(upgradesString) as Map<String, dynamic>;
