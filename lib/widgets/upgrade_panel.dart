@@ -34,9 +34,27 @@ class UpgradePanel extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(u.name, style: Theme.of(context).textTheme.titleMedium),
-                Text(
-                    'Cost: \$${u.cost} - Effect: +${u.effect} per tap - Owned: ${u.owned}'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(u.name,
+                          style: Theme.of(context).textTheme.titleMedium),
+                    ),
+                    Chip(label: Text('Owned: ${u.owned}')),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.attach_money, size: 16),
+                    const SizedBox(width: 4),
+                    Text('${u.cost}'),
+                    const SizedBox(width: 12),
+                    const Icon(Icons.upgrade, size: 16),
+                    const SizedBox(width: 4),
+                    Text('+${u.effect}/tap'),
+                  ],
+                ),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
