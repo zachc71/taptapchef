@@ -55,6 +55,15 @@ class GameController extends ChangeNotifier {
 
   Future<OfflineLoadResult> load() async {
     final result = await _storage.loadGame(idleMultiplier: 0.000833);
+    final player = await _storage.loadPlayerData();
+    coins = player.coins;
+    perTap = player.perTap;
+    hiredStaff
+      ..clear()
+      ..addAll(player.staff);
+    for (final u in upgrades) {
+      u.owned = player.upgrades[u.name] ?? 0;
+    }
     game.mealsServed = result.count;
     final adjustedEarned =
         effects.calculateOfflineEarnings(result.earned.toDouble()).toInt();
@@ -74,6 +83,12 @@ class GameController extends ChangeNotifier {
   Future<void> save() async {
     await _storage.saveGame(game.mealsServed);
     await _storage.saveFranchiseData(game);
+    await _storage.savePlayerData(
+      coins: coins,
+      perTap: perTap,
+      staff: hiredStaff,
+      upgrades: {for (final u in upgrades) u.name: u.owned},
+    );
   }
 
   void cook() {
