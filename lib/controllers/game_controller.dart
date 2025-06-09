@@ -54,6 +54,7 @@ class GameController extends ChangeNotifier {
     game.mealsServed = result.count;
     coins += result.earned;
     _lastMilestoneIndex = game.milestoneIndex;
+    await _storage.loadFranchiseData(game);
     notifyListeners();
     return result;
   }
@@ -64,7 +65,10 @@ class GameController extends ChangeNotifier {
         Timer.periodic(const Duration(seconds: 20), (_) => _spawnSpecial());
   }
 
-  Future<void> save() async => _storage.saveGame(game.mealsServed);
+  Future<void> save() async {
+    await _storage.saveGame(game.mealsServed);
+    await _storage.saveFranchiseData(game);
+  }
 
   void cook() {
     _incrementCombo();
@@ -245,6 +249,9 @@ class GameController extends ChangeNotifier {
     await _storage.clear();
     game.resetProgress();
     game.prestige.points = 0;
+    game.franchiseTokens = 0;
+    game.currentLocationIndex = 0;
+    game.purchasedPrestigeUpgrades.clear();
     coins = 0;
     perTap = 1;
     upgrades = upgradesForTier(game.milestoneIndex);

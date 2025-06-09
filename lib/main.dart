@@ -19,6 +19,8 @@ import 'widgets/staff_panel.dart';
 import 'widgets/mini_game_dialog.dart';
 import 'widgets/frenzy_overlay.dart';
 import 'widgets/milestone_overlay.dart';
+import 'models/franchise_location.dart';
+import 'widgets/franchise_hq.dart';
 import 'constants/milestones.dart';
 import 'constants/panels.dart';
 import 'models/game_state.dart';
@@ -228,6 +230,21 @@ class _CounterPageState extends ConsumerState<CounterPage>
     );
   }
 
+  void _showFranchiseHQ() {
+    HapticFeedback.selectionClick();
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => FranchiseHQ(
+        game: controller.game,
+        onPurchase: (id) {
+          controller.game.purchasePrestigeUpgrade(id);
+          Navigator.pop(context);
+          setState(() {});
+        },
+      ),
+    );
+  }
+
   Future<void> _resetGame() async {
     await controller.resetGame();
   }
@@ -253,6 +270,35 @@ class _CounterPageState extends ConsumerState<CounterPage>
     );
     if (confirm == true) {
       await _resetGame();
+    }
+  }
+
+  Future<void> _confirmFranchiseDeal() async {
+    HapticFeedback.selectionClick();
+    final tokens = 1 + (controller.game.mealsServed ~/ 1000);
+    final nextIndex =
+        (controller.game.currentLocationIndex + 1) % franchiseProgression.length;
+    final nextName = franchiseProgression[nextIndex].name;
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Sign Franchise Deal?'),
+        content: Text(
+            'Earn $tokens Franchise Tokens and move to $nextName.\nYour current restaurant progress will be reset.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Confirm'),
+          ),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      setState(() => controller.game.prestigeUp());
     }
   }
 
@@ -314,6 +360,10 @@ class _CounterPageState extends ConsumerState<CounterPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text('Current Location: ${controller.game.currentLocation.name}',
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text('Franchise Tokens: ${controller.game.franchiseTokens}'),
+                      const SizedBox(height: 8),
                       Text('Meals served: ${controller.game.mealsServed}'),
                       Text('Stage: ${controller.game.currentMilestone}'),
                       LinearProgressIndicator(value: progress),
@@ -321,9 +371,9 @@ class _CounterPageState extends ConsumerState<CounterPage>
                           ? 'Final milestone reached'
                           : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
                       Text('Prestige Points: ${controller.game.prestige.points}'),
-                      TextButton(
-                        onPressed: _showPrestigeSheet,
-                        child: const Text('Prestige Upgrades'),
+                      ElevatedButton(
+                        onPressed: _showFranchiseHQ,
+                        child: const Text('Franchise HQ'),
                       ),
                       Text('Passive taps/s: ${controller.currentTPS.toStringAsFixed(1)}'),
                       const SizedBox(height: 8),
@@ -350,10 +400,8 @@ class _CounterPageState extends ConsumerState<CounterPage>
                         Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ElevatedButton(
-                            onPressed: () => setState(() => controller.game.prestigeUp()),
-                            child: Text(
-                              'Prestige (x${controller.game.prestige.multiplier.toStringAsFixed(1)})',
-                            ),
+                            onPressed: _confirmFranchiseDeal,
+                            child: const Text('Sign Franchise Deal'),
                           ),
                         ),
                       const SizedBox(height: 24),
