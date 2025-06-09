@@ -299,6 +299,25 @@ class GameController extends ChangeNotifier {
     _passiveProgress = 0;
     _lastMilestoneIndex = 0;
     currentTPS = 0;
+    // Reset temporary gameplay state
+    specialVisible = false;
+    combo = 0;
+    frenzy = false;
+    adBoostActive = false;
+    adBoostSeconds = 0;
+    ripMode = false;
+
+    // Cancel any running timers associated with these states
+    comboTimer?.cancel();
+    comboTimer = null;
+    frenzyWarmupTimer?.cancel();
+    frenzyWarmupTimer = null;
+    frenzyDurationTimer?.cancel();
+    frenzyDurationTimer = null;
+    adBoostTimer?.cancel();
+    adBoostTimer = null;
+    ripTimer?.cancel();
+    ripTimer = null;
     notifyListeners();
   }
 
