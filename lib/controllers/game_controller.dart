@@ -5,14 +5,18 @@ import '../models/game_state.dart';
 import '../models/staff.dart';
 import '../models/upgrade.dart';
 import '../services/storage.dart';
+import 'effect_engine.dart';
+import '../models/artifact.dart';
 
 class GameController extends ChangeNotifier {
   final GameState game;
   final StorageService _storage;
+  late final EffectEngine effects;
 
   GameController({GameState? state, StorageService? storage})
       : game = state ?? GameState(),
         _storage = storage ?? StorageService() {
+    effects = EffectEngine(game);
     upgrades = upgradesForTier(game.milestoneIndex);
   }
 
@@ -52,11 +56,13 @@ class GameController extends ChangeNotifier {
   Future<OfflineLoadResult> load() async {
     final result = await _storage.loadGame(idleMultiplier: 0.000833);
     game.mealsServed = result.count;
-    coins += result.earned;
+    final adjustedEarned =
+        effects.calculateOfflineEarnings(result.earned.toDouble()).toInt();
+    coins += adjustedEarned;
     _lastMilestoneIndex = game.milestoneIndex;
     await _storage.loadFranchiseData(game);
     notifyListeners();
-    return result;
+    return OfflineLoadResult(result.count, adjustedEarned);
   }
 
   void start() {
@@ -75,7 +81,8 @@ class GameController extends ChangeNotifier {
     for (int i = 0; i < perTap; i++) {
       game.cook();
     }
-    coins += perTap * currentMultiplier;
+    final tapValue = effects.calculateFinalTapValue(perTap.toDouble());
+    coins += (tapValue * currentMultiplier).toInt();
     _checkMilestone();
     notifyListeners();
     save();
@@ -88,7 +95,8 @@ class GameController extends ChangeNotifier {
 
   void purchase(Upgrade upgrade, int quantity) {
     if (quantity <= 0) return;
-    final int totalCost = upgrade.cost * quantity;
+    final costPer = effects.calculateUpgradeCost(upgrade.cost.toDouble());
+    final int totalCost = (costPer * quantity).ceil();
     if (coins >= totalCost) {
       coins -= totalCost;
       perTap += upgrade.effect * quantity;
@@ -101,8 +109,10 @@ class GameController extends ChangeNotifier {
     double tapsPerSecond = 0;
     hiredStaff.forEach((type, qty) {
       final staff = staffOptions[type]!;
-      tapsPerSecond += staff.tapsPerSecond * qty;
+      final speed = effects.calculateStaffSpeed(staff.tapsPerSecond);
+      tapsPerSecond += speed * qty;
     });
+    tapsPerSecond = effects.calculatePassiveIncome(tapsPerSecond);
     _passiveProgress += tapsPerSecond;
     final int whole = _passiveProgress.floor();
     _passiveProgress -= whole;
@@ -111,7 +121,8 @@ class GameController extends ChangeNotifier {
       for (int i = 0; i < whole; i++) {
         game.cook();
       }
-      coins += perTap * whole;
+      final tapValue = effects.calculateFinalTapValue(perTap.toDouble());
+      coins += (tapValue * whole).toInt();
     }
     _checkMilestone();
     notifyListeners();
@@ -127,7 +138,8 @@ class GameController extends ChangeNotifier {
 
   void hireStaff(StaffType type, int quantity) {
     final staff = staffOptions[type]!;
-    final int totalCost = staff.cost * quantity;
+    final costPer = effects.calculateStaffCost(staff.cost.toDouble());
+    final int totalCost = (costPer * quantity).ceil();
     if (coins >= totalCost) {
       coins -= totalCost;
       hiredStaff[type] = (hiredStaff[type] ?? 0) + quantity;
@@ -154,6 +166,15 @@ class GameController extends ChangeNotifier {
 
   Future<void> rewardSpecial(int taps) async {
     coins += taps * 10;
+    if (Random().nextDouble() < 0.1) {
+      final available = gameArtifacts.keys
+          .where((id) => !game.ownedArtifactIds.contains(id))
+          .toList();
+      if (available.isNotEmpty) {
+        final id = available[Random().nextInt(available.length)];
+        game.ownedArtifactIds.add(id);
+      }
+    }
     notifyListeners();
   }
 

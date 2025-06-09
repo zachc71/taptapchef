@@ -11,6 +11,8 @@ class GameState extends ChangeNotifier {
   int franchiseTokens = 0;
   int currentLocationIndex = 0;
   Map<String, int> purchasedPrestigeUpgrades = {};
+  List<String> ownedArtifactIds = [];
+  List<String?> equippedArtifactIds = [null, null, null];
 
   FranchiseLocation get currentLocation =>
       franchiseProgression[currentLocationIndex];
@@ -78,5 +80,21 @@ class GameState extends ChangeNotifier {
     franchiseTokens -= cost;
     purchasedPrestigeUpgrades[upgradeId] = currentLevel + 1;
     notifyListeners();
+  }
+
+  void equipArtifact(String artifactId, int slotIndex) {
+    if (ownedArtifactIds.contains(artifactId) &&
+        slotIndex < equippedArtifactIds.length) {
+      if (equippedArtifactIds.contains(artifactId)) return;
+      equippedArtifactIds[slotIndex] = artifactId;
+      notifyListeners();
+    }
+  }
+
+  void unequipArtifact(int slotIndex) {
+    if (slotIndex < equippedArtifactIds.length) {
+      equippedArtifactIds[slotIndex] = null;
+      notifyListeners();
+    }
   }
 }
