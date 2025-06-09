@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/staff.dart';
 import 'pulse.dart';
+import '../util/format.dart';
 
 /// A panel for hiring staff using the same layout as [UpgradePanel].
 class StaffPanel extends StatelessWidget {
@@ -54,7 +55,7 @@ class StaffPanel extends StatelessWidget {
                     children: [
                       const Icon(Icons.attach_money, size: 16),
                       const SizedBox(width: 4),
-                      Text('${s.cost}'),
+                      Text(formatNumber(s.cost)),
                       const SizedBox(width: 12),
                       const Icon(Icons.timer, size: 16),
                       const SizedBox(width: 4),

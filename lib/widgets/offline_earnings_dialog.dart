@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../util/format.dart';
 
 class OfflineEarningsDialog extends StatelessWidget {
   final int earned;
@@ -16,7 +17,7 @@ class OfflineEarningsDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Welcome Back!'),
-      content: Text('You earned $earned coins while you were away.'),
+      content: Text('You earned ${formatNumber(earned)} coins while you were away.'),
       actions: [
         TextButton(onPressed: onClose, child: const Text('Nice')),
         TextButton(onPressed: onDouble, child: const Text('Double for Ad')),

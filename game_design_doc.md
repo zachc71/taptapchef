@@ -74,6 +74,17 @@
 
 ---
 
+## 📊 Progression Math Review
+
+- **Base milestone goals** follow a gentler curve: `4.8k`, `24k`, `72k`,
+  `144k`, `288k`, `480k`, `960k`, `2.4m`.
+- After signing a **Franchise Deal**, milestone goals are only **2%** of these
+  values so players can breeze through early tiers with just a few taps.
+- All large numbers in the UI are displayed using short formats
+  (`1k`, `5m`, `5b`, `5q`, etc.).
+
+---
+
 ## 🔓 Upgrade Trees
 
 | Category     | Examples                                  |

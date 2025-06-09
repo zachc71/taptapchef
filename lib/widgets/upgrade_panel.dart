@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/upgrade.dart';
 import 'pulse.dart';
+import '../util/format.dart';
 
 
 class UpgradePanel extends StatelessWidget {
@@ -48,7 +49,7 @@ class UpgradePanel extends StatelessWidget {
                   children: [
                     const Icon(Icons.attach_money, size: 16),
                     const SizedBox(width: 4),
-                    Text('${u.cost}'),
+                    Text(formatNumber(u.cost)),
                     const SizedBox(width: 12),
                     const Icon(Icons.upgrade, size: 16),
                     const SizedBox(width: 4),

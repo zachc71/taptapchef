@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/game_state.dart';
 import '../models/franchise_location.dart';
 import '../models/prestige_upgrade.dart';
+import '../util/format.dart';
 
 class FranchiseHQ extends StatelessWidget {
   final GameState game;
@@ -51,7 +52,7 @@ class FranchiseHQ extends StatelessWidget {
             final canBuy = !maxed && game.franchiseTokens >= cost;
             return ListTile(
               title: Text(u.name),
-              subtitle: Text('${u.description}\nLevel: $level/${u.maxLevel} - Cost: ${maxed ? 'MAX' : cost}'),
+              subtitle: Text('${u.description}\nLevel: $level/${u.maxLevel} - Cost: ${maxed ? 'MAX' : formatNumber(cost)}'),
               trailing: maxed
                   ? const Icon(Icons.check, color: Colors.green)
                   : ElevatedButton(
