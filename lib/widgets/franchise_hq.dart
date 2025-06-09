@@ -16,6 +16,8 @@ class FranchiseHQ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final upgrades = prestigeUpgrades.values.toList();
+    final locations =
+        franchiseLocationSets[game.locationSetIndex % franchiseLocationSets.length];
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -23,12 +25,12 @@ class FranchiseHQ extends StatelessWidget {
         children: [
           Text('Location Progression', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
-          ...franchiseProgression.map((loc) {
-            final index = franchiseProgression.indexOf(loc);
+          ...locations.map((loc) {
+            final index = locations.indexOf(loc);
             String status;
-            if (index < game.currentLocationIndex) {
+            if (index < game.locationTierIndex) {
               status = 'Completed';
-            } else if (index == game.currentLocationIndex) {
+            } else if (index == game.locationTierIndex) {
               status = 'Current';
             } else {
               status = 'Upcoming';
