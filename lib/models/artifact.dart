@@ -155,4 +155,15 @@ final Map<String, Artifact> gameArtifacts = {
     drawback:
         ArtifactEffect(type: ArtifactEffectType.tapValueDebuff, value: 0.0),
   ),
+  'gold_plated_plate': const Artifact(
+    id: 'gold_plated_plate',
+    name: 'Gold-Plated Plate',
+    description:
+        'Transforms lucky dishes into riches, but makes events less rewarding.',
+    iconAsset: 'assets/icons/gold_plated_plate.png',
+    bonus:
+        ArtifactEffect(type: ArtifactEffectType.goldenMealMultiplier, value: 2.0),
+    drawback:
+        ArtifactEffect(type: ArtifactEffectType.eventRewardMultiplier, value: 0.5),
+  ),
 };

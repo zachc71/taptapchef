@@ -93,4 +93,75 @@ class EffectEngine {
     }
     return value;
   }
+
+  double calculateEventReward(double baseReward) {
+    double value = baseReward;
+    for (final art in _equipped) {
+      for (final effect in [art.bonus, art.drawback]) {
+        if (effect.type == ArtifactEffectType.eventRewardMultiplier) {
+          value *= effect.value;
+        }
+      }
+    }
+    return value;
+  }
+
+  double adjustGoldenMealChance(double baseChance) {
+    double chance = baseChance;
+    for (final art in _equipped) {
+      for (final effect in [art.bonus, art.drawback]) {
+        if (effect.type == ArtifactEffectType.goldenMealChance) {
+          chance += effect.value;
+        }
+      }
+    }
+    return chance;
+  }
+
+  double calculateGoldenMealReward(double baseReward) {
+    double value = baseReward;
+    for (final art in _equipped) {
+      for (final effect in [art.bonus, art.drawback]) {
+        if (effect.type == ArtifactEffectType.goldenMealMultiplier) {
+          value *= effect.value;
+        }
+      }
+    }
+    return value;
+  }
+
+  int totalFreePurchases() {
+    int total = 0;
+    for (final art in _equipped) {
+      for (final effect in [art.bonus, art.drawback]) {
+        if (effect.type == ArtifactEffectType.firstPurchasesFree) {
+          total += effect.value.toInt();
+        }
+      }
+    }
+    return total;
+  }
+
+  double calculateTapPassiveSeconds(double baseSeconds) {
+    double seconds = baseSeconds;
+    for (final art in _equipped) {
+      for (final effect in [art.bonus, art.drawback]) {
+        if (effect.type == ArtifactEffectType.tapTriggerPassiveSeconds) {
+          seconds += effect.value;
+        }
+      }
+    }
+    return seconds;
+  }
+
+  bool get singleStaffTypeOnly {
+    for (final art in _equipped) {
+      for (final effect in [art.bonus, art.drawback]) {
+        if (effect.type == ArtifactEffectType.singleStaffTypeOnly) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }
