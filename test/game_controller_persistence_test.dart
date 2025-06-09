@@ -23,5 +23,16 @@ void main() {
     expect(controller2.hiredStaff[StaffType.tacoFlipper], 2);
     expect(controller2.upgrades.first.owned, 1);
   });
+
+  test('rewardSpecial persists coin reward', () async {
+    SharedPreferences.setMockInitialValues({});
+    final controller = GameController();
+    await controller.rewardSpecial(2); // adds 20 coins
+
+    final controller2 = GameController();
+    await controller2.load();
+
+    expect(controller2.coins, 20);
+  });
 }
 
