@@ -191,6 +191,7 @@ class GameController extends ChangeNotifier {
       }
     }
     notifyListeners();
+    save();
   }
 
   int get currentMultiplier {
