@@ -1,11 +1,19 @@
 import 'package:flutter/foundation.dart';
 
 import 'prestige.dart';
+import 'franchise_location.dart';
+import 'prestige_upgrade.dart';
 
 class GameState extends ChangeNotifier {
   int mealsServed;
   int milestoneIndex;
   final Prestige prestige;
+  int franchiseTokens = 0;
+  int currentLocationIndex = 0;
+  Map<String, int> purchasedPrestigeUpgrades = {};
+
+  FranchiseLocation get currentLocation =>
+      franchiseProgression[currentLocationIndex];
 
   GameState({this.mealsServed = 0, this.milestoneIndex = 0, Prestige? prestige})
       : prestige = prestige ?? Prestige();
@@ -53,8 +61,22 @@ class GameState extends ChangeNotifier {
 
   void prestigeUp() {
     if (atFinalMilestone) {
-      prestige.gainPoint();
+      int tokensEarned = 1 + (mealsServed ~/ 1000);
+      franchiseTokens += tokensEarned;
+      currentLocationIndex =
+          (currentLocationIndex + 1) % franchiseProgression.length;
       resetProgress();
     }
+  }
+
+  void purchasePrestigeUpgrade(String upgradeId) {
+    final upgrade = prestigeUpgrades[upgradeId];
+    if (upgrade == null) return;
+    final currentLevel = purchasedPrestigeUpgrades[upgradeId] ?? 0;
+    final cost = upgrade.getCost(currentLevel);
+    if (cost == -1 || franchiseTokens < cost) return;
+    franchiseTokens -= cost;
+    purchasedPrestigeUpgrades[upgradeId] = currentLevel + 1;
+    notifyListeners();
   }
 }
