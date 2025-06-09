@@ -30,14 +30,14 @@ class GameState extends ChangeNotifier {
   ];
 
   static const List<int> milestoneGoals = [
-    600,
-    3000,
-    9000,
-    18000,
-    36000,
-    60000,
-    120000,
-    300000
+    4800,
+    24000,
+    72000,
+    144000,
+    288000,
+    480000,
+    960000,
+    2400000
   ];
 
   String get currentMilestone => milestones[milestoneIndex];
