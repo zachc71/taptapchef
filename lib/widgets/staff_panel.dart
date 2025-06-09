@@ -40,9 +40,27 @@ class StaffPanel extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${s.name} ($owned hired)',
-                      style: Theme.of(context).textTheme.titleMedium),
-                  Text('Cost: ${s.cost} \u2014 ${s.tapsPerSecond} taps/s'),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(s.name,
+                            style: Theme.of(context).textTheme.titleMedium),
+                      ),
+                      Chip(label: Text('Hired: $owned')),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.attach_money, size: 16),
+                      const SizedBox(width: 4),
+                      Text('${s.cost}'),
+                      const SizedBox(width: 12),
+                      const Icon(Icons.timer, size: 16),
+                      const SizedBox(width: 4),
+                      Text('${s.tapsPerSecond} tps'),
+                    ],
+                  ),
                   const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
