@@ -104,6 +104,7 @@ class _CounterPageState extends ConsumerState<CounterPage>
             child: MilestoneOverlay(
               title: 'Milestone: ${controller.game.currentMilestone}',
               art: art,
+              dialogue: dialogue,
               onContinue: () => Navigator.pop(context),
             ),
           );
