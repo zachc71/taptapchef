@@ -24,6 +24,7 @@ import 'widgets/franchise_hq.dart';
 import 'constants/milestones.dart';
 import 'constants/panels.dart';
 import 'models/game_state.dart';
+import 'util/format.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
 
@@ -318,9 +319,8 @@ class _CounterPageState extends ConsumerState<CounterPage>
   @override
   Widget build(BuildContext context) {
     final bool finalStage = controller.game.atFinalMilestone;
-    final int goal = finalStage
-        ? 0
-        : GameState.milestoneGoals[controller.game.milestoneIndex];
+    final int goal =
+        finalStage ? 0 : controller.game.currentMilestoneGoal;
     final double progress =
         finalStage ? 1 : controller.game.mealsServed / goal;
     final String nextName = finalStage
@@ -362,9 +362,9 @@ class _CounterPageState extends ConsumerState<CounterPage>
                     children: [
                       Text('Current Location: ${controller.game.currentLocation.name}',
                           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text('Franchise Tokens: ${controller.game.franchiseTokens}'),
+                      Text('Franchise Tokens: ${formatNumber(controller.game.franchiseTokens)}'),
                       const SizedBox(height: 8),
-                      Text('Meals served: ${controller.game.mealsServed}'),
+                      Text('Meals served: ${formatNumber(controller.game.mealsServed)}'),
                       Text('Stage: ${controller.game.currentMilestone}'),
                       LinearProgressIndicator(value: progress),
                       Text(finalStage
@@ -405,7 +405,7 @@ class _CounterPageState extends ConsumerState<CounterPage>
                           ),
                         ),
                       const SizedBox(height: 24),
-                      Text('Coins: ${controller.coins}'),
+                      Text('Coins: ${formatNumber(controller.coins)}'),
                       const SizedBox(height: 16),
                       UpgradePanel(
                         upgrades: controller.upgrades,

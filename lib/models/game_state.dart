@@ -35,7 +35,7 @@ class GameState extends ChangeNotifier {
     'Multiverse Franchise'
   ];
 
-  static const List<int> milestoneGoals = [
+  static const List<int> baseMilestoneGoals = [
     4800,
     24000,
     72000,
@@ -46,13 +46,24 @@ class GameState extends ChangeNotifier {
     2400000
   ];
 
+  /// Returns the milestone goal for [index] taking prestige bonuses into
+  /// account. After the player has franchised at least once, goals are
+  /// dramatically reduced to allow very quick progress through early tiers.
+  int milestoneGoalAt(int index) {
+    final base = baseMilestoneGoals[index];
+    final scale = franchiseTokens > 0 ? 0.02 : 1.0;
+    return (base * scale).ceil();
+  }
+
+  int get currentMilestoneGoal => milestoneGoalAt(milestoneIndex);
+
   String get currentMilestone => milestones[milestoneIndex];
 
   bool get atFinalMilestone => milestoneIndex >= milestones.length - 1;
 
   void cook() {
     mealsServed += prestige.multiplier.ceil();
-    if (!atFinalMilestone && mealsServed >= milestoneGoals[milestoneIndex]) {
+    if (!atFinalMilestone && mealsServed >= currentMilestoneGoal) {
       milestoneIndex++;
       mealsServed = 0;
     }
