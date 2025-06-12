@@ -26,6 +26,7 @@ import 'constants/milestones.dart';
 import 'constants/panels.dart';
 import 'models/game_state.dart';
 import 'util/format.dart';
+import 'services/effect_service.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
 
@@ -51,6 +52,7 @@ class CounterPage extends ConsumerStatefulWidget {
 class _CounterPageState extends ConsumerState<CounterPage>
     with SingleTickerProviderStateMixin {
   late final GameController controller;
+  late EffectService _effectService;
   late final AnimationController _frenzyController;
   Offset _frenzyOffset = Offset.zero;
   int _prevMilestone = 0;
@@ -59,6 +61,7 @@ class _CounterPageState extends ConsumerState<CounterPage>
   void initState() {
     super.initState();
     controller = ref.read(gameControllerProvider);
+    _effectService = EffectService(controller.game);
     _frenzyController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
