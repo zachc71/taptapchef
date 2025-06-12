@@ -64,6 +64,8 @@ class GameController extends ChangeNotifier {
     for (final u in upgrades) {
       u.owned = player.upgrades[u.name] ?? 0;
     }
+    game.ownedArtifactIds = List.from(player.ownedArtifacts);
+    game.equippedArtifactIds = List.from(player.equippedArtifacts);
     game.mealsServed = result.count;
     final adjustedEarned =
         effects.calculateOfflineEarnings(result.earned.toDouble()).toInt();
@@ -88,6 +90,8 @@ class GameController extends ChangeNotifier {
       perTap: perTap,
       staff: hiredStaff,
       upgrades: {for (final u in upgrades) u.name: u.owned},
+      ownedArtifacts: game.ownedArtifactIds,
+      equippedArtifacts: game.equippedArtifactIds,
     );
   }
 
@@ -289,6 +293,8 @@ class GameController extends ChangeNotifier {
     game.franchiseTokens = 0;
     game.locationSetIndex = 0;
     game.purchasedPrestigeUpgrades.clear();
+    game.ownedArtifactIds.clear();
+    game.equippedArtifactIds = [null, null, null];
     coins = 0;
     perTap = 1;
     upgrades = upgradesForTier(game.milestoneIndex);

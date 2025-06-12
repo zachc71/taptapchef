@@ -21,6 +21,7 @@ import 'widgets/frenzy_overlay.dart';
 import 'widgets/milestone_overlay.dart';
 import 'models/franchise_location.dart';
 import 'widgets/franchise_hq.dart';
+import 'widgets/artifact_pantry.dart';
 import 'constants/milestones.dart';
 import 'constants/panels.dart';
 import 'models/game_state.dart';
@@ -246,6 +247,14 @@ class _CounterPageState extends ConsumerState<CounterPage>
     );
   }
 
+  void _showPantry() {
+    HapticFeedback.selectionClick();
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => ArtifactPantry(game: controller.game),
+    ).then((_) => setState(() {}));
+  }
+
   Future<void> _resetGame() async {
     await controller.resetGame();
   }
@@ -418,6 +427,11 @@ class _CounterPageState extends ConsumerState<CounterPage>
                       ElevatedButton(
                         onPressed: _showAdRewardSheet,
                         child: const Text('Watch Ad for Rewards'),
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: _showPantry,
+                        child: const Text('The Pantry'),
                       ),
                     ],
                   ),

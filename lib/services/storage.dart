@@ -14,12 +14,16 @@ class PlayerData {
   final int perTap;
   final Map<StaffType, int> staff;
   final Map<String, int> upgrades;
+  final List<String> ownedArtifacts;
+  final List<String?> equippedArtifacts;
 
   PlayerData({
     required this.coins,
     required this.perTap,
     required this.staff,
     required this.upgrades,
+    required this.ownedArtifacts,
+    required this.equippedArtifacts,
   });
 }
 
@@ -33,6 +37,8 @@ class StorageService {
   static const _keyPerTap = 'perTap';
   static const _keyStaff = 'hiredStaff';
   static const _keyOwnedUpgrades = 'ownedUpgrades';
+  static const _keyOwnedArtifacts = 'ownedArtifacts';
+  static const _keyEquippedArtifacts = 'equippedArtifacts';
 
   /// Saves the current count and timestamp to local storage.
   Future<void> saveGame(int count) async {
@@ -54,6 +60,8 @@ class StorageService {
     required int perTap,
     required Map<StaffType, int> staff,
     required Map<String, int> upgrades,
+    required List<String> ownedArtifacts,
+    required List<String?> equippedArtifacts,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_keyCoins, coins);
@@ -61,6 +69,10 @@ class StorageService {
     await prefs.setString(_keyStaff,
         jsonEncode(staff.map((k, v) => MapEntry(k.name, v))));
     await prefs.setString(_keyOwnedUpgrades, jsonEncode(upgrades));
+    await prefs.setStringList(_keyOwnedArtifacts, ownedArtifacts);
+    await prefs.setStringList(
+        _keyEquippedArtifacts,
+        equippedArtifacts.map((e) => e ?? '').toList());
   }
 
   Future<void> loadFranchiseData(GameState game) async {
@@ -93,8 +105,21 @@ class StorageService {
       final decoded = jsonDecode(upgradeStr) as Map<String, dynamic>;
       upgrades = decoded.map((k, v) => MapEntry(k, v as int));
     }
+    final ownedArtifacts =
+        prefs.getStringList(_keyOwnedArtifacts) ?? <String>[];
+    final equippedList = prefs.getStringList(_keyEquippedArtifacts) ?? <String>[];
+    final equippedArtifacts =
+        equippedList.map((e) => e.isEmpty ? null : e).toList();
+    while (equippedArtifacts.length < 3) {
+      equippedArtifacts.add(null);
+    }
     return PlayerData(
-        coins: coins, perTap: perTap, staff: staff, upgrades: upgrades);
+        coins: coins,
+        perTap: perTap,
+        staff: staff,
+        upgrades: upgrades,
+        ownedArtifacts: ownedArtifacts,
+        equippedArtifacts: equippedArtifacts);
   }
 
   /// Loads the saved count and applies idle earnings based on the time elapsed.
@@ -132,5 +157,7 @@ class StorageService {
     await prefs.remove(_keyPerTap);
     await prefs.remove(_keyStaff);
     await prefs.remove(_keyOwnedUpgrades);
+    await prefs.remove(_keyOwnedArtifacts);
+    await prefs.remove(_keyEquippedArtifacts);
   }
 }
