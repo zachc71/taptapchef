@@ -39,47 +39,52 @@ class KitchenScreen extends StatelessWidget {
     final availableStaff =
         staffByTier[controller.game.milestoneIndex] ?? {};
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.attach_money, size: 20),
+                  const SizedBox(width: 4),
+                  Text(formatNumber(controller.coins)),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(Icons.business, size: 20),
+                  const SizedBox(width: 4),
+                  Text(formatNumber(controller.game.franchiseTokens)),
+                ],
+              ),
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: onSettings,
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.attach_money, size: 20),
-                    const SizedBox(width: 4),
-                    Text(formatNumber(controller.coins)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.business, size: 20),
-                    const SizedBox(width: 4),
-                    Text(formatNumber(controller.game.franchiseTokens)),
-                  ],
-                ),
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: onSettings,
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text('Current Location: ${controller.game.currentLocation.name}',
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            LinearProgressIndicator(value: progress),
-            Text(finalStage
-                ? 'Final milestone reached'
-                : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
-            const SizedBox(height: 16),
-            Text('Meals Served: ${formatNumber(controller.game.mealsServed)}'),
-            Text('Income per Tap: ${controller.perTap}'),
+                Text('Current Location: ${controller.game.currentLocation.name}',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                LinearProgressIndicator(value: progress),
+                Text(finalStage
+                    ? 'Final milestone reached'
+                    : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
+                const SizedBox(height: 16),
+                Text('Meals Served: ${formatNumber(controller.game.mealsServed)}'),
+                Text('Income per Tap: ${controller.perTap}'),
             const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
