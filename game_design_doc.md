@@ -71,13 +71,16 @@
 | Endgame      | Black hole catering, existential AI | “Conceptual hunger”       |
 | Time Warp Kitchen | Temporal upgrades, time-loop menus | Chrono-chili |
 | Multiverse Franchise | Reality-hopping logistics | Schrödinger's soufflé |
+| Quantum Cafeteria | Particles serve themselves | Quark quiche |
+| Cosmic Supperclub | Guests arrive from lightyears away | Nebula noodles |
+| Omniversal Eatery | Reality on the menu | Infinity ice cream |
 
 ---
 
 ## 📊 Progression Math Review
 
 - **Base milestone goals** follow a gentler curve: `4.8k`, `24k`, `72k`,
-  `144k`, `288k`, `480k`, `960k`, `2.4m`.
+  `144k`, `288k`, `480k`, `960k`, `2.4m`, `4.8m`, `9.6m`, `19.2m`.
 - After signing a **Franchise Deal**, milestone goals are only **2%** of these
   values so players can breeze through early tiers with just a few taps.
 - All large numbers in the UI are displayed using short formats

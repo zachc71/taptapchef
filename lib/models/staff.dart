@@ -114,4 +114,16 @@ const Map<int, Map<StaffType, Staff>> staffByTier = {
     StaffType.multiverseManager: _multiverseManager,
     StaffType.realityServer: _realityServer,
   },
+  8: {
+    StaffType.multiverseManager: _multiverseManager,
+    StaffType.realityServer: _realityServer,
+  },
+  9: {
+    StaffType.multiverseManager: _multiverseManager,
+    StaffType.realityServer: _realityServer,
+  },
+ 10: {
+    StaffType.multiverseManager: _multiverseManager,
+    StaffType.realityServer: _realityServer,
+  },
 };

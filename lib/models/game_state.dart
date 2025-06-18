@@ -32,7 +32,10 @@ class GameState extends ChangeNotifier {
     'Space Empire',
     'Endgame',
     'Time Warp Kitchen',
-    'Multiverse Franchise'
+    'Multiverse Franchise',
+    'Quantum Cafeteria',
+    'Cosmic Supperclub',
+    'Omniversal Eatery'
   ];
 
   static const List<int> baseMilestoneGoals = [
@@ -43,7 +46,10 @@ class GameState extends ChangeNotifier {
     288000,
     480000,
     960000,
-    2400000
+    2400000,
+    4800000,
+    9600000,
+    19200000
   ];
 
   /// Returns the milestone goal for [index] taking prestige bonuses into

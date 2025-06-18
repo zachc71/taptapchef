@@ -60,6 +60,21 @@ final Map<int, List<Upgrade>> upgradesByTier = {
     Upgrade(name: 'Infinite Menu Generator', cost: 10000000, effect: 300),
     Upgrade(name: 'Reality Distortion Service', cost: 12000000, effect: 350),
   ],
+  8: [
+    Upgrade(name: 'Quantum Entanglement Oven', cost: 14000000, effect: 400),
+    Upgrade(name: 'Dark Matter Marinade', cost: 18000000, effect: 450),
+    Upgrade(name: 'Teleport Delivery', cost: 22000000, effect: 500),
+  ],
+  9: [
+    Upgrade(name: 'Cosmic Catering', cost: 28000000, effect: 550),
+    Upgrade(name: 'Galaxy Infusion Lab', cost: 34000000, effect: 600),
+    Upgrade(name: 'Gravity-Free Dining', cost: 40000000, effect: 650),
+  ],
+ 10: [
+    Upgrade(name: 'Reality Rewrite Kitchen', cost: 50000000, effect: 700),
+    Upgrade(name: 'Omniversal Reservations', cost: 60000000, effect: 800),
+    Upgrade(name: 'Existence Flavour Enhancer', cost: 75000000, effect: 900),
+  ],
 };
 
 /// Creates a deep copy of the upgrade list for the given [tier].

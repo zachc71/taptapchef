@@ -22,6 +22,7 @@ import 'widgets/milestone_overlay.dart';
 import 'models/franchise_location.dart';
 import 'widgets/franchise_hq.dart';
 import 'widgets/artifact_pantry.dart';
+import 'widgets/progression_sheet.dart';
 import 'constants/milestones.dart';
 import 'constants/panels.dart';
 import 'models/game_state.dart';
@@ -258,6 +259,17 @@ class _CounterPageState extends ConsumerState<CounterPage>
     ).then((_) => setState(() {}));
   }
 
+  void _showProgressionSheet() {
+    HapticFeedback.selectionClick();
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => ProgressionSheet(
+        currentTier: controller.game.milestoneIndex,
+        currentProgress: controller.game.mealsServed,
+      ),
+    );
+  }
+
   Future<void> _resetGame() async {
     await controller.resetGame();
   }
@@ -435,6 +447,11 @@ class _CounterPageState extends ConsumerState<CounterPage>
                       ElevatedButton(
                         onPressed: _showPantry,
                         child: const Text('The Pantry'),
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: _showProgressionSheet,
+                        child: const Text('Progression'),
                       ),
                     ],
                   ),

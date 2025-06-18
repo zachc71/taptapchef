@@ -7,6 +7,9 @@ const List<String> upgradePanelTitles = [
   'Endgame Upgrades',
   'Temporal Adjustments',
   'Multiverse Investments',
+  'Quantum Enhancements',
+  'Cosmic Expansions',
+  'Omniversal Upgrades',
 ];
 
 const List<String> hirePanelTitles = [
@@ -18,4 +21,7 @@ const List<String> hirePanelTitles = [
   'Endgame Operatives',
   'Temporal Staff',
   'Multiverse Talent',
+  'Quantum Crew',
+  'Cosmic Staff',
+  'Omniversal Team',
 ];
