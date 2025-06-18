@@ -36,6 +36,12 @@ class GameController extends ChangeNotifier {
   int get lastMilestoneIndex => _lastMilestoneIndex;
   double currentTPS = 0;
 
+  /// Current passive income per second in coins.
+  double get idleIncomePerSecond {
+    final tapValue = effectService.calculateTapValue(perTap.toDouble());
+    return currentTPS * tapValue;
+  }
+
   bool ripMode = false;
   Color ripColor = Colors.transparent;
   double ripRotation = 0;

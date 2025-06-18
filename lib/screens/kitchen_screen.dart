@@ -46,17 +46,30 @@ class KitchenScreen extends StatelessWidget {
           color: Theme.of(context).scaffoldBackgroundColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.attach_money, size: 20),
-                  const SizedBox(width: 4),
-                  Text(formatNumber(controller.coins)),
+                  Row(
+                    children: [
+                      const Tooltip(
+                          message: 'Cash',
+                          child: Icon(Icons.attach_money, size: 20)),
+                      const SizedBox(width: 4),
+                      Text(formatNumber(controller.coins)),
+                    ],
+                  ),
+                  Text(
+                    'Idle: ${formatNumber(controller.idleIncomePerSecond.round())}/sec',
+                    style: const TextStyle(fontSize: 10),
+                  ),
                 ],
               ),
               Row(
                 children: [
-                  const Icon(Icons.business, size: 20),
+                  const Tooltip(
+                      message: 'Tokens', child: Icon(Icons.token, size: 20)),
                   const SizedBox(width: 4),
                   Text(formatNumber(controller.game.franchiseTokens)),
                 ],
@@ -81,7 +94,7 @@ class KitchenScreen extends StatelessWidget {
                 LinearProgressIndicator(value: progress),
                 Text(finalStage
                     ? 'Final milestone reached'
-                    : '${(progress * 100).toStringAsFixed(0)}% to $nextName'),
+                    : '${formatNumber(controller.game.mealsServed)}/${formatNumber(goal)} meals - ${(progress * 100).toStringAsFixed(0)}% to $nextName'),
                 const SizedBox(height: 16),
                 Text('Meals Served: ${formatNumber(controller.game.mealsServed)}'),
                 Text('Income per Tap: ${controller.perTap}'),
