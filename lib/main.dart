@@ -104,7 +104,7 @@ class _CounterPageState extends ConsumerState<CounterPage>
         context: context,
         barrierDismissible: false,
         barrierLabel: 'milestone',
-        barrierColor: Colors.black54,
+        barrierColor: Colors.black87,
         transitionDuration: const Duration(milliseconds: 400),
         pageBuilder: (context, animation, secondaryAnimation) {
           return FadeTransition(
