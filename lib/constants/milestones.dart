@@ -40,9 +40,24 @@ const List<String> milestoneArt = [
   /||\\
   ''',
   r'''
-   *-|-*
+  *-|-*
   /o\\
   \\v/
+  ''',
+  r'''
+  [@@]
+  /||\\
+   /\\
+  ''',
+  r'''
+  {**}
+  <||>
+  /__\\
+  ''',
+  r'''
+  |-O-|
+  / \\
+  \\ /
   ''',
 ];
 
@@ -55,4 +70,7 @@ const List<String> milestoneDialogues = [
   "You've fed the galaxy. Nothing left but existential hunger.",
   "Time loops around the kitchen. Omelettes now cause deja vu.",
   "The multiverse demands endless specials. Hope you're not out of ideas.",
+  "Quantum diners appear before they exist. That's efficient!",
+  "Cosmic beings book tables centuries in advance.",
+  "You serve reality itself. Taste is subjective.",
 ];

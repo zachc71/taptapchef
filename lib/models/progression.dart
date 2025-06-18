@@ -51,4 +51,19 @@ const List<ProgressionTier> progressionTiers = [
     unlockRequirement: 1200000,
     reward: 'Reality-hopping logistics',
   ),
+  ProgressionTier(
+    name: 'Quantum Cafeteria',
+    unlockRequirement: 2400000,
+    reward: 'Particles serve themselves',
+  ),
+  ProgressionTier(
+    name: 'Cosmic Supperclub',
+    unlockRequirement: 4800000,
+    reward: 'Guests arrive from lightyears away',
+  ),
+  ProgressionTier(
+    name: 'Omniversal Eatery',
+    unlockRequirement: 9600000,
+    reward: 'Reality itself is on the menu',
+  ),
 ];
