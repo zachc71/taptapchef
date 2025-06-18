@@ -41,4 +41,14 @@ const List<ProgressionTier> progressionTiers = [
     unlockRequirement: 300000,
     reward: 'Black hole catering, existential AI',
   ),
+  ProgressionTier(
+    name: 'Time Warp Kitchen',
+    unlockRequirement: 600000,
+    reward: 'Temporal upgrades, time-loop menus',
+  ),
+  ProgressionTier(
+    name: 'Multiverse Franchise',
+    unlockRequirement: 1200000,
+    reward: 'Reality-hopping logistics',
+  ),
 ];
