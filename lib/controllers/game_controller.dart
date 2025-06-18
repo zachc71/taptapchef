@@ -30,6 +30,8 @@ class GameController extends ChangeNotifier {
   int perTap = 1;
   late List<Upgrade> upgrades;
 
+  bool tutorialComplete = false;
+
   final Map<StaffType, int> hiredStaff = {};
   double _passiveProgress = 0;
   int _lastMilestoneIndex = 0;
@@ -77,6 +79,7 @@ class GameController extends ChangeNotifier {
     final player = await _storage.loadPlayerData();
     coins = player.coins;
     perTap = player.perTap;
+    tutorialComplete = player.tutorialComplete;
     hiredStaff
       ..clear()
       ..addAll(player.staff);
@@ -111,6 +114,7 @@ class GameController extends ChangeNotifier {
       upgrades: {for (final u in upgrades) u.name: u.owned},
       ownedArtifacts: game.ownedArtifactIds,
       equippedArtifacts: game.equippedArtifactIds,
+      tutorialComplete: tutorialComplete,
     );
   }
 
@@ -325,6 +329,7 @@ class GameController extends ChangeNotifier {
     _passiveProgress = 0;
     _lastMilestoneIndex = game.milestoneIndex;
     currentTPS = 0;
+    tutorialComplete = false;
 
     // Reset temporary gameplay state
     specialVisible = false;
@@ -367,6 +372,7 @@ class GameController extends ChangeNotifier {
     _passiveProgress = 0;
     _lastMilestoneIndex = 0;
     currentTPS = 0;
+    tutorialComplete = false;
     // Reset temporary gameplay state
     specialVisible = false;
     combo = 0;

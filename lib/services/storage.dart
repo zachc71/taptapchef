@@ -16,6 +16,7 @@ class PlayerData {
   final Map<String, int> upgrades;
   final List<String> ownedArtifacts;
   final List<String?> equippedArtifacts;
+  final bool tutorialComplete;
 
   PlayerData({
     required this.coins,
@@ -24,6 +25,7 @@ class PlayerData {
     required this.upgrades,
     required this.ownedArtifacts,
     required this.equippedArtifacts,
+    this.tutorialComplete = false,
   });
 }
 
@@ -39,6 +41,7 @@ class StorageService {
   static const _keyOwnedUpgrades = 'ownedUpgrades';
   static const _keyOwnedArtifacts = 'ownedArtifacts';
   static const _keyEquippedArtifacts = 'equippedArtifacts';
+  static const _keyTutorial = 'tutorialComplete';
 
   /// Saves the current count and timestamp to local storage.
   Future<void> saveGame(int count) async {
@@ -62,6 +65,7 @@ class StorageService {
     required Map<String, int> upgrades,
     required List<String> ownedArtifacts,
     required List<String?> equippedArtifacts,
+    required bool tutorialComplete,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_keyCoins, coins);
@@ -73,6 +77,7 @@ class StorageService {
     await prefs.setStringList(
         _keyEquippedArtifacts,
         equippedArtifacts.map((e) => e ?? '').toList());
+    await prefs.setBool(_keyTutorial, tutorialComplete);
   }
 
   Future<void> loadFranchiseData(GameState game) async {
@@ -113,13 +118,15 @@ class StorageService {
     while (equippedArtifacts.length < 3) {
       equippedArtifacts.add(null);
     }
+    final tutorialComplete = prefs.getBool(_keyTutorial) ?? false;
     return PlayerData(
         coins: coins,
         perTap: perTap,
         staff: staff,
         upgrades: upgrades,
         ownedArtifacts: ownedArtifacts,
-        equippedArtifacts: equippedArtifacts);
+        equippedArtifacts: equippedArtifacts,
+        tutorialComplete: tutorialComplete);
   }
 
   /// Loads the saved count and applies idle earnings based on the time elapsed.
@@ -159,5 +166,6 @@ class StorageService {
     await prefs.remove(_keyOwnedUpgrades);
     await prefs.remove(_keyOwnedArtifacts);
     await prefs.remove(_keyEquippedArtifacts);
+    await prefs.remove(_keyTutorial);
   }
 }

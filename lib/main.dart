@@ -23,6 +23,7 @@ import 'screens/boosts_screen.dart';
 import 'widgets/mini_game_dialog.dart';
 import 'widgets/frenzy_overlay.dart';
 import 'widgets/milestone_overlay.dart';
+import 'widgets/tutorial_overlay.dart';
 import 'models/franchise_location.dart';
 import 'widgets/franchise_hq.dart';
 import 'widgets/artifact_pantry.dart';
@@ -85,6 +86,9 @@ class _CounterPageState extends ConsumerState<CounterPage>
       if (result.earned > 0) {
         await _showOfflineEarningsDialog(result.earned);
       }
+      if (!controller.tutorialComplete) {
+        await _showTutorial();
+      }
     });
     controller.start();
     _prevMilestone = controller.lastMilestoneIndex;
@@ -118,7 +122,10 @@ class _CounterPageState extends ConsumerState<CounterPage>
               title: 'Milestone: ${controller.game.currentMilestone}',
               art: art,
               dialogue: dialogue,
-              onContinue: () => Navigator.pop(context),
+              onContinue: () {
+                Navigator.pop(context);
+                _showMilestoneFeature(controller.game.milestoneIndex);
+              },
             ),
           );
         },
@@ -179,6 +186,55 @@ class _CounterPageState extends ConsumerState<CounterPage>
         );
       },
     );
+  }
+
+  Future<void> _showTutorial() async {
+    await showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: 'tutorial',
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return FadeTransition(
+          opacity: animation,
+          child: TutorialOverlay(
+            onComplete: () {
+              controller.tutorialComplete = true;
+              controller.save();
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showMilestoneFeature(int index) {
+    String? message;
+    int? tab;
+    if (index == 1) {
+      message = 'New Feature Unlocked: Hire Staff!';
+      tab = 1; // Upgrades screen
+    } else if (index == 3) {
+      message = 'New Feature Unlocked: Prestige!';
+      tab = 2; // Prestige screen
+    }
+    if (message != null) {
+      setState(() => _navIndex = tab!);
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Feature Unlocked'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            )
+          ],
+        ),
+      );
+    }
   }
 
   Future<void> _showAdRewardSheet() async {
