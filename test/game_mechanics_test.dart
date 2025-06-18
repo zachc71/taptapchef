@@ -7,22 +7,30 @@ import 'package:taptapchef/models/staff.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('combo timer decreases after timeout', () {
+  test('combo decreases gradually after inactivity', () {
     SharedPreferences.setMockInitialValues({});
     fakeAsync((async) {
       final controller = GameController();
 
-      controller.cook();
-      async.elapse(const Duration(seconds: 1));
-      controller.cook();
+      for (var i = 0; i < 5; i++) {
+        controller.cook();
+      }
 
-      async.elapse(GameController.comboTimeout + const Duration(milliseconds: 1));
+      expect(controller.combo, 5);
+
+      async.elapse(const Duration(seconds: 1));
+      expect(controller.combo, 4);
+
+      async.elapse(const Duration(seconds: 3));
+      expect(controller.combo, 1);
+
+      async.elapse(const Duration(seconds: 1));
       expect(controller.combo, 0);
-      expect(controller.comboTimer!.isActive, isFalse);
+      expect(controller.comboTimer, isNull);
     });
   });
 
-  test('frenzy activates after warmup and ends after duration', () {
+  test('frenzy activates immediately and ends after duration', () {
     SharedPreferences.setMockInitialValues({});
     fakeAsync((async) {
       final controller = GameController();
@@ -32,10 +40,6 @@ void main() {
       }
 
       expect(controller.combo, GameController.comboMax);
-      expect(controller.frenzy, isFalse);
-      expect(controller.frenzyWarmupTimer, isNotNull);
-
-      async.elapse(const Duration(seconds: 1));
       expect(controller.frenzy, isTrue);
       expect(controller.frenzyDurationTimer, isNotNull);
 

@@ -11,7 +11,7 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 ### Basic Loop:
 - **Tap to Cook** – Taps = meals served = cash.
 - **Build Combos** – Rapid taps raise a combo meter for extra earnings. It now
-  takes **20 taps** to fill the meter.
+  takes **30 taps** to fill the meter.
 - **Frenzy Mode** – Max the meter for a short burst of huge profits. During
   Frenzy a fiery overlay gradually rises from the bottom of the screen.
 - **Special Customers** – Occasionally a VIP pops up. Tap them for mini-games or temporary boosts.
