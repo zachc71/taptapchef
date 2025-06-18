@@ -47,10 +47,9 @@ class GameController extends ChangeNotifier {
 
   int combo = 0;
   Timer? comboTimer;
-  Timer? frenzyWarmupTimer;
   Timer? frenzyDurationTimer;
-  static const int comboMax = 20;
-  static const Duration comboTimeout = Duration(seconds: 3);
+  static const int comboMax = 30;
+  static const Duration comboTimeout = Duration(seconds: 1);
 
   bool frenzy = false;
 
@@ -209,10 +208,19 @@ class GameController extends ChangeNotifier {
   void _incrementCombo() {
     comboTimer?.cancel();
     _updateComboAndFrenzy();
-    comboTimer = Timer(comboTimeout, () {
-      frenzyWarmupTimer?.cancel();
-      combo = (combo - 2).clamp(0, comboMax);
-      notifyListeners();
+    comboTimer = Timer.periodic(comboTimeout, (timer) {
+      if (frenzy) {
+        timer.cancel();
+        comboTimer = null;
+        return;
+      }
+      if (combo > 0) {
+        combo -= 1;
+        notifyListeners();
+      } else {
+        timer.cancel();
+        comboTimer = null;
+      }
     });
   }
 
@@ -221,23 +229,12 @@ class GameController extends ChangeNotifier {
       combo += 1;
     }
     if (combo >= comboMax && !frenzy) {
-      _startFrenzyWarmup();
+      _startFrenzyMode();
     }
-  }
-
-  void _startFrenzyWarmup() {
-    if (frenzy) return;
-    frenzyWarmupTimer?.cancel();
-    frenzyWarmupTimer = Timer(const Duration(seconds: 1), () {
-      if (combo >= comboMax && !frenzy) {
-        _startFrenzyMode();
-      }
-    });
   }
 
   void _startFrenzyMode() {
     if (frenzy) return;
-    frenzyWarmupTimer?.cancel();
     frenzyDurationTimer?.cancel();
     frenzy = true;
     combo = comboMax;
@@ -319,8 +316,6 @@ class GameController extends ChangeNotifier {
     // Cancel any running timers associated with these states
     comboTimer?.cancel();
     comboTimer = null;
-    frenzyWarmupTimer?.cancel();
-    frenzyWarmupTimer = null;
     frenzyDurationTimer?.cancel();
     frenzyDurationTimer = null;
     adBoostTimer?.cancel();

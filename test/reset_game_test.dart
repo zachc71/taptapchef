@@ -27,7 +27,6 @@ void main() {
     expect(controller.ripMode, isFalse);
 
     expect(controller.comboTimer, isNull);
-    expect(controller.frenzyWarmupTimer, isNull);
     expect(controller.frenzyDurationTimer, isNull);
     expect(controller.adBoostTimer, isNull);
     expect(controller.ripTimer, isNull);
