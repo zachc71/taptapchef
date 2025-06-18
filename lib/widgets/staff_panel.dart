@@ -33,7 +33,6 @@ class StaffPanel extends StatelessWidget {
           final bool affordable = coins >= s.cost;
           final bool affordable10 = coins >= s.cost * 10;
           final bool affordable100 = coins >= s.cost * 100;
-          final int maxAffordable = coins ~/ s.cost;
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 4),
             child: Padding(
@@ -83,13 +82,6 @@ class StaffPanel extends StatelessWidget {
                         onPressed:
                             affordable100 ? () => onHire(type, 100) : null,
                         child: const Text('100'),
-                      ),
-                      const SizedBox(width: 4),
-                      ElevatedButton(
-                        onPressed: maxAffordable > 0
-                            ? () => onHire(type, maxAffordable)
-                            : null,
-                        child: const Text('MAX'),
                       ),
                     ],
                   ),

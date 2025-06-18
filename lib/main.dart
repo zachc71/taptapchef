@@ -357,6 +357,8 @@ class _CounterPageState extends ConsumerState<CounterPage>
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _navIndex,
           onTap: (i) => setState(() => _navIndex = i),
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.black,
           items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.local_fire_department), label: "Kitchen"),

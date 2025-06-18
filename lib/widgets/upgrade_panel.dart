@@ -27,7 +27,6 @@ class UpgradePanel extends StatelessWidget {
         final bool affordable = currency >= u.cost;
         final bool affordable10 = currency >= u.cost * 10;
         final bool affordable100 = currency >= u.cost * 100;
-        final int maxAffordable = currency ~/ u.cost;
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 4),
           child: Padding(
@@ -77,13 +76,6 @@ class UpgradePanel extends StatelessWidget {
                       onPressed:
                           affordable100 ? () => onPurchase(u, 100) : null,
                       child: const Text('100'),
-                    ),
-                    const SizedBox(width: 4),
-                    ElevatedButton(
-                      onPressed: maxAffordable > 0
-                          ? () => onPurchase(u, maxAffordable)
-                          : null,
-                      child: const Text('MAX'),
                     ),
                   ],
                 ),
