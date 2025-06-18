@@ -16,10 +16,10 @@ void main() {
     game.franchiseTokens = 1;
 
     final baseGoal = GameState.baseMilestoneGoals.first;
-    expect(game.milestoneGoalAt(0), (baseGoal * 0.02).ceil());
+    expect(game.milestoneGoalAt(0), (baseGoal * 0.5).ceil());
 
     final lastBaseGoal = GameState.baseMilestoneGoals.last;
     expect(game.milestoneGoalAt(GameState.baseMilestoneGoals.length - 1),
-        (lastBaseGoal * 0.02).ceil());
+        (lastBaseGoal * 0.5).ceil());
   });
 }

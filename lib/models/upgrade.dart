@@ -20,60 +20,60 @@ class Upgrade {
 /// create fresh [Upgrade] instances based on these templates so that ownership
 /// counts remain local to the player's state.
 final Map<int, List<Upgrade>> upgradesByTier = {
-  0: [
-    Upgrade(name: 'Better Grill', cost: 30, effect: 1),
-    Upgrade(name: 'Heat Lamps', cost: 75, effect: 1),
-    Upgrade(name: 'Bigger Condiment Station', cost: 150, effect: 2),
+ 0: [
+    Upgrade(name: 'Better Grill', cost: 150, effect: 2),
+    Upgrade(name: 'Heat Lamps', cost: 375, effect: 2),
+    Upgrade(name: 'Bigger Condiment Station', cost: 750, effect: 4),
   ],
   1: [
-    Upgrade(name: 'Jukebox', cost: 300, effect: 2),
-    Upgrade(name: 'Milkshake Machine', cost: 600, effect: 3),
-    Upgrade(name: 'Comfier Booths', cost: 1200, effect: 2),
+    Upgrade(name: 'Jukebox', cost: 1500, effect: 4),
+    Upgrade(name: 'Milkshake Machine', cost: 3000, effect: 6),
+    Upgrade(name: 'Comfier Booths', cost: 6000, effect: 4),
   ],
   2: [
-    Upgrade(name: 'Corporate Training', cost: 2500, effect: 3),
-    Upgrade(name: 'Supply Chain Logistics', cost: 5000, effect: 5),
-    Upgrade(name: 'Automated Drive-Thru', cost: 10000, effect: 8),
+    Upgrade(name: 'Corporate Training', cost: 12500, effect: 6),
+    Upgrade(name: 'Supply Chain Logistics', cost: 25000, effect: 10),
+    Upgrade(name: 'Automated Drive-Thru', cost: 50000, effect: 16),
   ],
   3: [
-    Upgrade(name: 'Global Advertising', cost: 20000, effect: 10),
-    Upgrade(name: 'Celebrity Chef Partnership', cost: 40000, effect: 12),
-    Upgrade(name: 'International Logistics', cost: 80000, effect: 15),
+    Upgrade(name: 'Global Advertising', cost: 100000, effect: 20),
+    Upgrade(name: 'Celebrity Chef Partnership', cost: 200000, effect: 24),
+    Upgrade(name: 'International Logistics', cost: 400000, effect: 30),
   ],
   4: [
-    Upgrade(name: 'Zero-G Kitchens', cost: 150000, effect: 20),
-    Upgrade(name: 'Alien Ingredient Contracts', cost: 300000, effect: 30),
-    Upgrade(name: 'Hyperdrive Delivery', cost: 600000, effect: 45),
+    Upgrade(name: 'Zero-G Kitchens', cost: 750000, effect: 40),
+    Upgrade(name: 'Alien Ingredient Contracts', cost: 1500000, effect: 60),
+    Upgrade(name: 'Hyperdrive Delivery', cost: 3000000, effect: 90),
   ],
   5: [
-    Upgrade(name: 'Singularity Stove', cost: 1000000, effect: 60),
-    Upgrade(name: 'Quantum Spice Rack', cost: 1500000, effect: 80),
-    Upgrade(name: 'AI Gourmet Designer', cost: 2000000, effect: 100),
+    Upgrade(name: 'Singularity Stove', cost: 5000000, effect: 120),
+    Upgrade(name: 'Quantum Spice Rack', cost: 7500000, effect: 160),
+    Upgrade(name: 'AI Gourmet Designer', cost: 10000000, effect: 200),
   ],
   6: [
-    Upgrade(name: 'Time Dilation Oven', cost: 2500000, effect: 120),
-    Upgrade(name: 'Chrono Shift Staff', cost: 3500000, effect: 160),
-    Upgrade(name: 'Paradox Inventory', cost: 5000000, effect: 200),
+    Upgrade(name: 'Time Dilation Oven', cost: 12500000, effect: 240),
+    Upgrade(name: 'Chrono Shift Staff', cost: 17500000, effect: 320),
+    Upgrade(name: 'Paradox Inventory', cost: 25000000, effect: 400),
   ],
   7: [
-    Upgrade(name: 'Dimensional Dining Room', cost: 8000000, effect: 250),
-    Upgrade(name: 'Infinite Menu Generator', cost: 10000000, effect: 300),
-    Upgrade(name: 'Reality Distortion Service', cost: 12000000, effect: 350),
+    Upgrade(name: 'Dimensional Dining Room', cost: 40000000, effect: 500),
+    Upgrade(name: 'Infinite Menu Generator', cost: 50000000, effect: 600),
+    Upgrade(name: 'Reality Distortion Service', cost: 60000000, effect: 700),
   ],
   8: [
-    Upgrade(name: 'Quantum Entanglement Oven', cost: 14000000, effect: 400),
-    Upgrade(name: 'Dark Matter Marinade', cost: 18000000, effect: 450),
-    Upgrade(name: 'Teleport Delivery', cost: 22000000, effect: 500),
+    Upgrade(name: 'Quantum Entanglement Oven', cost: 70000000, effect: 800),
+    Upgrade(name: 'Dark Matter Marinade', cost: 90000000, effect: 900),
+    Upgrade(name: 'Teleport Delivery', cost: 110000000, effect: 1000),
   ],
   9: [
-    Upgrade(name: 'Cosmic Catering', cost: 28000000, effect: 550),
-    Upgrade(name: 'Galaxy Infusion Lab', cost: 34000000, effect: 600),
-    Upgrade(name: 'Gravity-Free Dining', cost: 40000000, effect: 650),
+    Upgrade(name: 'Cosmic Catering', cost: 140000000, effect: 1100),
+    Upgrade(name: 'Galaxy Infusion Lab', cost: 170000000, effect: 1200),
+    Upgrade(name: 'Gravity-Free Dining', cost: 200000000, effect: 1300),
   ],
- 10: [
-    Upgrade(name: 'Reality Rewrite Kitchen', cost: 50000000, effect: 700),
-    Upgrade(name: 'Omniversal Reservations', cost: 60000000, effect: 800),
-    Upgrade(name: 'Existence Flavour Enhancer', cost: 75000000, effect: 900),
+  10: [
+    Upgrade(name: 'Reality Rewrite Kitchen', cost: 250000000, effect: 1400),
+    Upgrade(name: 'Omniversal Reservations', cost: 300000000, effect: 1600),
+    Upgrade(name: 'Existence Flavour Enhancer', cost: 375000000, effect: 1800),
   ],
 };
 

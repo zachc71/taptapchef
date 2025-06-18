@@ -39,25 +39,25 @@ class GameState extends ChangeNotifier {
   ];
 
   static const List<int> baseMilestoneGoals = [
-    4800,
-    24000,
-    72000,
-    144000,
-    288000,
-    480000,
-    960000,
-    2400000,
+    48000,
+    240000,
+    720000,
+    1440000,
+    2880000,
     4800000,
     9600000,
-    19200000
+    24000000,
+    48000000,
+    96000000,
+    192000000
   ];
 
   /// Returns the milestone goal for [index] taking prestige bonuses into
   /// account. After the player has franchised at least once, goals are
-  /// dramatically reduced to allow very quick progress through early tiers.
+  /// reduced but still require effort to progress through early tiers.
   int milestoneGoalAt(int index) {
     final base = baseMilestoneGoals[index];
-    final scale = franchiseTokens > 0 ? 0.02 : 1.0;
+    final scale = franchiseTokens > 0 ? 0.5 : 1.0;
     return (base * scale).ceil();
   }
 

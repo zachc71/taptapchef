@@ -323,7 +323,8 @@ class _CounterPageState extends ConsumerState<CounterPage>
       ),
     );
     if (confirm == true) {
-      setState(() => controller.game.prestigeUp());
+      await controller.franchise();
+      setState(() {});
     }
   }
 
