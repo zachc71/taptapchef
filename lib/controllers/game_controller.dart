@@ -55,6 +55,17 @@ class GameController extends ChangeNotifier {
 
   bool specialVisible = false;
 
+  bool get anyPurchasesAffordable {
+    if (upgrades.any((u) => coins >= u.cost)) {
+      return true;
+    }
+    final availableStaff = staffByTier[game.milestoneIndex] ?? {};
+    for (final s in availableStaff.values) {
+      if (coins >= s.cost) return true;
+    }
+    return false;
+  }
+
   Future<OfflineLoadResult> load() async {
     final result = await _storage.loadGame(idleMultiplier: 0.000833);
     final player = await _storage.loadPlayerData();

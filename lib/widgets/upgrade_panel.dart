@@ -27,8 +27,10 @@ class UpgradePanel extends StatelessWidget {
         final bool affordable = currency >= u.cost;
         final bool affordable10 = currency >= u.cost * 10;
         final bool affordable100 = currency >= u.cost * 100;
+        final bool highlightCard = affordable10 || affordable100;
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 4),
+          color: highlightCard ? Colors.green[50] : null,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -67,15 +69,21 @@ class UpgradePanel extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 4),
-                    ElevatedButton(
-                      onPressed: affordable10 ? () => onPurchase(u, 10) : null,
-                      child: const Text('10'),
+                    Pulse(
+                      active: affordable10,
+                      child: ElevatedButton(
+                        onPressed: affordable10 ? () => onPurchase(u, 10) : null,
+                        child: const Text('10'),
+                      ),
                     ),
                     const SizedBox(width: 4),
-                    ElevatedButton(
-                      onPressed:
-                          affordable100 ? () => onPurchase(u, 100) : null,
-                      child: const Text('100'),
+                    Pulse(
+                      active: affordable100,
+                      child: ElevatedButton(
+                        onPressed:
+                            affordable100 ? () => onPurchase(u, 100) : null,
+                        child: const Text('100'),
+                      ),
                     ),
                   ],
                 ),
