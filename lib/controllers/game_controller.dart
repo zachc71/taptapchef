@@ -286,6 +286,51 @@ class GameController extends ChangeNotifier {
     return true;
   }
 
+  /// Franchise the current restaurant. Resets coins, staff and upgrades while
+  /// awarding a random artifact. Prestige points and franchise tokens are
+  /// preserved via [GameState.prestigeUp].
+  Future<void> franchise() async {
+    if (!game.atFinalMilestone) return;
+    game.prestigeUp();
+
+    final available = gameArtifacts.keys
+        .where((id) => !game.ownedArtifactIds.contains(id))
+        .toList();
+    if (available.isNotEmpty) {
+      final id = available[Random().nextInt(available.length)];
+      game.ownedArtifactIds.add(id);
+    }
+
+    coins = 0;
+    perTap = 1;
+    upgrades = upgradesForTier(game.milestoneIndex);
+    hiredStaff.clear();
+    _passiveProgress = 0;
+    _lastMilestoneIndex = game.milestoneIndex;
+    currentTPS = 0;
+
+    // Reset temporary gameplay state
+    specialVisible = false;
+    combo = 0;
+    frenzy = false;
+    adBoostActive = false;
+    adBoostSeconds = 0;
+    ripMode = false;
+
+    // Cancel any running timers associated with these states
+    comboTimer?.cancel();
+    comboTimer = null;
+    frenzyDurationTimer?.cancel();
+    frenzyDurationTimer = null;
+    adBoostTimer?.cancel();
+    adBoostTimer = null;
+    ripTimer?.cancel();
+    ripTimer = null;
+
+    notifyListeners();
+    await save();
+  }
+
   Future<void> resetGame() async {
     await _storage.clear();
     game.resetProgress();

@@ -28,37 +28,37 @@ class Staff {
 
 // Individual staff definitions so they can be reused across tier maps.
 const Staff _tacoFlipper =
-    Staff(name: 'Taco Flipper', cost: 50, tapsPerSecond: 0.3);
+    Staff(name: 'Taco Flipper', cost: 250, tapsPerSecond: 0.6);
 const Staff _flyerHandout =
-    Staff(name: 'Flyer Handout Person', cost: 75, tapsPerSecond: 0.1);
+    Staff(name: 'Flyer Handout Person', cost: 375, tapsPerSecond: 0.2);
 const Staff _waitressOnSkates =
-    Staff(name: 'Waitress on Skates', cost: 400, tapsPerSecond: 1.5);
+    Staff(name: 'Waitress on Skates', cost: 2000, tapsPerSecond: 3.0);
 const Staff _grumpyCook =
-    Staff(name: 'Grumpy but Efficient Cook', cost: 800, tapsPerSecond: 3.0);
+    Staff(name: 'Grumpy but Efficient Cook', cost: 4000, tapsPerSecond: 6.0);
 const Staff _shiftManager =
-    Staff(name: 'Shift Manager', cost: 2000, tapsPerSecond: 5.0);
+    Staff(name: 'Shift Manager', cost: 10000, tapsPerSecond: 10.0);
 const Staff _marketingIntern =
-    Staff(name: 'Marketing Intern', cost: 3500, tapsPerSecond: 1.0);
+    Staff(name: 'Marketing Intern', cost: 17500, tapsPerSecond: 2.0);
 const Staff _corporateConsultant =
-    Staff(name: 'Corporate Consultant', cost: 5000, tapsPerSecond: 6.0);
+    Staff(name: 'Corporate Consultant', cost: 25000, tapsPerSecond: 12.0);
 const Staff _brandAmbassador =
-    Staff(name: 'Brand Ambassador', cost: 7500, tapsPerSecond: 8.0);
+    Staff(name: 'Brand Ambassador', cost: 37500, tapsPerSecond: 16.0);
 const Staff _alienSousChef =
-    Staff(name: 'Alien Sous Chef', cost: 15000, tapsPerSecond: 12.0);
+    Staff(name: 'Alien Sous Chef', cost: 75000, tapsPerSecond: 24.0);
 const Staff _robotServer =
-    Staff(name: 'Robot Server', cost: 25000, tapsPerSecond: 15.0);
+    Staff(name: 'Robot Server', cost: 125000, tapsPerSecond: 30.0);
 const Staff _aiHost =
-    Staff(name: 'AI Host', cost: 40000, tapsPerSecond: 20.0);
+    Staff(name: 'AI Host', cost: 200000, tapsPerSecond: 40.0);
 const Staff _quantumCook =
-    Staff(name: 'Quantum Cook', cost: 60000, tapsPerSecond: 25.0);
+    Staff(name: 'Quantum Cook', cost: 300000, tapsPerSecond: 50.0);
 const Staff _chronoChef =
-    Staff(name: 'Chrono Chef', cost: 100000, tapsPerSecond: 30.0);
+    Staff(name: 'Chrono Chef', cost: 500000, tapsPerSecond: 60.0);
 const Staff _timeWaiter =
-    Staff(name: 'Time Waiter', cost: 150000, tapsPerSecond: 35.0);
+    Staff(name: 'Time Waiter', cost: 750000, tapsPerSecond: 70.0);
 const Staff _multiverseManager =
-    Staff(name: 'Multiverse Manager', cost: 250000, tapsPerSecond: 45.0);
+    Staff(name: 'Multiverse Manager', cost: 1250000, tapsPerSecond: 90.0);
 const Staff _realityServer =
-    Staff(name: 'Reality Server', cost: 400000, tapsPerSecond: 60.0);
+    Staff(name: 'Reality Server', cost: 2000000, tapsPerSecond: 120.0);
 
 /// Lookup for all staff by type regardless of tier.
 const Map<StaffType, Staff> staffOptions = {
