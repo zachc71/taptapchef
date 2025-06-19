@@ -7,6 +7,7 @@ import '../models/upgrade.dart';
 import '../util/format.dart';
 import '../widgets/upgrade_panel.dart';
 import '../widgets/staff_panel.dart';
+import '../constants/theme.dart';
 
 /// Main gameplay screen for tapping and viewing progress.
 class KitchenScreen extends StatelessWidget {
@@ -118,6 +119,7 @@ class KitchenScreen extends StatelessWidget {
               child: Transform.translate(
                 offset: frenzyOffset,
                 child: ElevatedButton(
+                  style: cookButtonStyle,
                   onPressed: controller.cook,
                   child: const Text('Cook!'),
                 ),

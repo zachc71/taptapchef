@@ -64,10 +64,11 @@ class _MilestoneOverlayState extends State<MilestoneOverlay>
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
                   Text(
                     widget.title,
                     style: theme.textTheme.headlineMedium?.copyWith(

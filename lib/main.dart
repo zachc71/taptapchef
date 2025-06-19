@@ -23,6 +23,7 @@ import 'widgets/frenzy_overlay.dart';
 import 'widgets/milestone_overlay.dart';
 import 'widgets/tutorial_overlay.dart';
 import 'constants/milestones.dart';
+import 'constants/theme.dart';
 import 'services/effect_service.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
@@ -32,9 +33,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Tap Tap Chef',
-      home: CounterPage(),
+      theme: appTheme,
+      home: const CounterPage(),
     );
   }
 }
