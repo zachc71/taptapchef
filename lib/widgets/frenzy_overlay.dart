@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 /// An overlay used during frenzy mode that animates a vertical gradient
 /// from red/orange at the bottom to transparent at the top.
 class FrenzyOverlay extends StatefulWidget {
-  const FrenzyOverlay({super.key});
+  final Duration duration;
+  const FrenzyOverlay({super.key, this.duration = const Duration(seconds: 5)});
 
   @override
   State<FrenzyOverlay> createState() => _FrenzyOverlayState();
@@ -18,7 +19,7 @@ class _FrenzyOverlayState extends State<FrenzyOverlay>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: widget.duration,
     )..forward();
   }
 

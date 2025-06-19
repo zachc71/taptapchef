@@ -28,7 +28,7 @@ class UpgradePanel extends StatelessWidget {
         final bool affordable10 = currency >= u.cost * 10;
         final bool affordable100 = currency >= u.cost * 100;
         final bool highlightCard = affordable10 || affordable100;
-        return Card(
+        final card = Card(
           margin: const EdgeInsets.symmetric(vertical: 4),
           color: highlightCard ? Colors.green[50] : null,
           child: Padding(
@@ -90,6 +90,14 @@ class UpgradePanel extends StatelessWidget {
               ],
             ),
           ),
+        );
+        return TweenAnimationBuilder<double>(
+          key: ValueKey(u.name),
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 300),
+          builder: (context, value, child) =>
+              Opacity(opacity: value, child: child),
+          child: card,
         );
       }),
     ]);
