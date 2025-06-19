@@ -22,6 +22,8 @@ class GameController extends ChangeNotifier {
 
   late final Timer _timer;
   Timer? _specialTimer;
+  Timer? _autosaveTimer;
+  static const Duration autosaveInterval = Duration(seconds: 5);
 
   int coins = 0;
   int perTap = 1;
@@ -99,6 +101,8 @@ class GameController extends ChangeNotifier {
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tickPassive());
     _specialTimer =
         Timer.periodic(const Duration(seconds: 20), (_) => _spawnSpecial());
+    _autosaveTimer =
+        Timer.periodic(autosaveInterval, (_) => save());
   }
 
   Future<void> save() async {
@@ -124,7 +128,6 @@ class GameController extends ChangeNotifier {
     coins += (tapValue * currentMultiplier).toInt();
     _checkMilestone();
     notifyListeners();
-    save();
   }
 
   void addCoins(int amount) {
@@ -171,7 +174,6 @@ class GameController extends ChangeNotifier {
     if (_lastMilestoneIndex != game.milestoneIndex) {
       _lastMilestoneIndex = game.milestoneIndex;
       upgrades = upgradesForTier(game.milestoneIndex);
-      notifyListeners();
     }
   }
 
@@ -396,6 +398,7 @@ class GameController extends ChangeNotifier {
     ripTimer?.cancel();
     frenzyDurationTimer?.cancel();
     _specialTimer?.cancel();
+    _autosaveTimer?.cancel();
     adBoostTimer?.cancel();
     save();
     super.dispose();
