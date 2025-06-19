@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
 import 'prestige.dart';
-import 'franchise_location.dart';
+import 'franchise_location.dart' as locations;
 import 'prestige_upgrade.dart';
-import '../constants/milestones.dart';
+import '../constants/milestones.dart' as milestone_data;
 
 class GameState extends ChangeNotifier {
   int mealsServed;
@@ -16,15 +16,16 @@ class GameState extends ChangeNotifier {
   List<String?> equippedArtifactIds = [null, null, null];
 
   int get locationTierIndex =>
-      (milestoneIndex * franchiseTiers.length) ~/ milestones.length;
+      (milestoneIndex * locations.franchiseTiers.length) ~/
+          GameState.milestones.length;
 
-  FranchiseLocation get currentLocation => franchiseLocationSets[
-          locationSetIndex % franchiseLocationSets.length]
+  FranchiseLocation get currentLocation => locations.franchiseLocationSets[
+          locationSetIndex % locations.franchiseLocationSets.length]
       [locationTierIndex];
 
   /// Background image associated with the current milestone.
   String get currentBackground =>
-      milestoneBackgrounds[milestoneIndex];
+      milestone_data.milestoneBackgrounds[milestoneIndex];
 
   GameState({this.mealsServed = 0, this.milestoneIndex = 0, Prestige? prestige})
       : prestige = prestige ?? Prestige();
@@ -68,9 +69,10 @@ class GameState extends ChangeNotifier {
 
   int get currentMilestoneGoal => milestoneGoalAt(milestoneIndex);
 
-  String get currentMilestone => milestones[milestoneIndex];
+  String get currentMilestone => GameState.milestones[milestoneIndex];
 
-  bool get atFinalMilestone => milestoneIndex >= milestones.length - 1;
+  bool get atFinalMilestone =>
+      milestoneIndex >= GameState.milestones.length - 1;
 
   void cook() {
     mealsServed += prestige.multiplier.ceil();
@@ -92,7 +94,7 @@ class GameState extends ChangeNotifier {
       int tokensEarned = 1 + (mealsServed ~/ 1000);
       franchiseTokens += tokensEarned;
       locationSetIndex =
-          (locationSetIndex + 1) % franchiseLocationSets.length;
+          (locationSetIndex + 1) % locations.franchiseLocationSets.length;
       resetProgress();
     }
   }
