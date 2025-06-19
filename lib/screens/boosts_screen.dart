@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/artifact_pantry.dart';
+import '../widgets/ad_reward_sheet.dart';
 import '../controllers/game_controller.dart';
 
 /// Screen for ad rewards and artifact management.
@@ -60,15 +61,9 @@ class _BoostsScreenState extends State<BoostsScreen>
             children: [
               ListView(
                 children: [
-                  ListTile(
-                    leading: const Icon(Icons.timer),
-                    title: const Text('Double earnings for 5 minutes'),
-                    onTap: _rewardFiveMin,
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.attach_money),
-                    title: const Text('Get 100 coins'),
-                    onTap: _rewardCoins,
+                  AdRewardSheet(
+                    onFiveMin: _rewardFiveMin,
+                    onCoins: _rewardCoins,
                   ),
                   ListTile(
                     leading: const Icon(Icons.mood),
