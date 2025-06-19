@@ -18,16 +18,7 @@ class EffectService {
   /// Calculates the final tap value from [baseValue] applying all artifact bonuses.
   double calculateTapValue(double baseValue) {
     double additiveBonus = 0;
-    // Currently no additive tap bonuses exist but the loop remains for future use.
-    for (final artifact in _equippedArtifacts) {
-      // ignore: unused_local_variable
-      for (final effect in [artifact.bonus, artifact.drawback]) {
-        // placeholder for potential additive effects
-        // if (effect.type == ArtifactEffectType.addFlatTapValue) {
-        //   additiveBonus += effect.value;
-        // }
-      }
-    }
+    // Currently no additive tap bonuses exist. Placeholder for future additive effects.
     double valueAfterAdditive = baseValue + additiveBonus;
 
     double multiplicativeBonus = 1.0;
