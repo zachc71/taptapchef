@@ -14,6 +14,7 @@ import 'providers/game_controller_provider.dart';
 import 'widgets/offline_earnings_dialog.dart';
 import 'widgets/ad_reward_sheet.dart';
 import 'screens/kitchen_screen.dart';
+import 'screens/management_screen.dart';
 import 'screens/prestige_screen.dart';
 import 'screens/boosts_screen.dart';
 import 'widgets/mini_game_dialog.dart';
@@ -199,10 +200,10 @@ class _CounterPageState extends ConsumerState<CounterPage>
     int? tab;
     if (index == 1) {
       message = 'New Feature Unlocked: Hire Staff!';
-      tab = 0; // Kitchen screen
+      tab = 1; // Management screen
     } else if (index == 3) {
       message = 'New Feature Unlocked: Prestige!';
-      tab = 1; // Prestige screen
+      tab = 2; // Prestige screen
     }
     if (message != null) {
       setState(() => _navIndex = tab!);
@@ -326,13 +327,18 @@ class _CounterPageState extends ConsumerState<CounterPage>
         return KitchenScreen(
           key: const ValueKey('kitchen'),
           controller: controller,
-          hireStaff: _hireStaff,
-          purchaseUpgrade: _purchase,
           onAdReward: _showAdRewardSheet,
           onSettings: _showSettings,
           frenzyOffset: _frenzyOffset,
         );
       case 1:
+        return ManagementScreen(
+          key: const ValueKey('manage'),
+          controller: controller,
+          purchaseUpgrade: _purchase,
+          hireStaff: _hireStaff,
+        );
+      case 2:
         return PrestigeScreen(
           key: const ValueKey('prestige'),
           controller: controller,
@@ -407,6 +413,8 @@ class _CounterPageState extends ConsumerState<CounterPage>
           items: [
             const BottomNavigationBarItem(
                 icon: Icon(Icons.local_fire_department), label: "Kitchen"),
+            const BottomNavigationBarItem(
+                icon: Icon(Icons.store), label: "Manage"),
             const BottomNavigationBarItem(
                 icon: Icon(Icons.star_border), label: "Prestige"),
             const BottomNavigationBarItem(

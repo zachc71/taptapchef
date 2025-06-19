@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import "../models/game_state.dart";
-import "../constants/panels.dart";
 import '../controllers/game_controller.dart';
-import '../models/staff.dart';
-import '../models/upgrade.dart';
 import '../util/format.dart';
-import '../widgets/upgrade_panel.dart';
-import '../widgets/staff_panel.dart';
 import '../constants/theme.dart';
 
 /// Main gameplay screen for tapping and viewing progress.
 class KitchenScreen extends StatelessWidget {
   final GameController controller;
-  final void Function(Upgrade, int) purchaseUpgrade;
-  final void Function(StaffType, int) hireStaff;
   final VoidCallback onAdReward;
   final VoidCallback onSettings;
   final Offset frenzyOffset;
@@ -21,8 +14,6 @@ class KitchenScreen extends StatelessWidget {
   const KitchenScreen({
     super.key,
     required this.controller,
-    required this.hireStaff,
-    required this.purchaseUpgrade,
     required this.onAdReward,
     required this.onSettings,
     this.frenzyOffset = Offset.zero,
@@ -37,8 +28,6 @@ class KitchenScreen extends StatelessWidget {
     final String nextName = finalStage
         ? 'Completed'
         : GameState.milestones[controller.game.milestoneIndex + 1];
-    final availableStaff =
-        staffByTier[controller.game.milestoneIndex] ?? {};
 
     return Stack(
       children: [
@@ -130,21 +119,6 @@ class KitchenScreen extends StatelessWidget {
             if (controller.adBoostActive)
               Text(
                   'Ad boost: ${(controller.adBoostSeconds ~/ 60).toString().padLeft(2, '0')}:${(controller.adBoostSeconds % 60).toString().padLeft(2, '0')}'),
-            const SizedBox(height: 16),
-            UpgradePanel(
-              upgrades: controller.upgrades,
-              currency: controller.coins,
-              onPurchase: purchaseUpgrade,
-              title: upgradePanelTitles[controller.game.milestoneIndex],
-            ),
-            const SizedBox(height: 16),
-            StaffPanel(
-              staff: availableStaff,
-              hired: controller.hiredStaff,
-              coins: controller.coins,
-              onHire: hireStaff,
-              title: hirePanelTitles[controller.game.milestoneIndex],
-            ),
             ElevatedButton(
               onPressed: onAdReward,
               child: const Text('Watch Ad for Rewards'),
