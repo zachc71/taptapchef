@@ -74,3 +74,18 @@ const List<String> milestoneDialogues = [
   "Cosmic beings book tables centuries in advance.",
   "You serve reality itself. Taste is subjective.",
 ];
+
+/// Placeholder asset paths for milestone background images.
+const List<String> milestoneBackgrounds = [
+  'assets/images/bg_street.png',
+  'assets/images/bg_diner.png',
+  'assets/images/bg_chain.png',
+  'assets/images/bg_corporate.png',
+  'assets/images/bg_space.png',
+  'assets/images/bg_endgame.png',
+  'assets/images/bg_time.png',
+  'assets/images/bg_multiverse.png',
+  'assets/images/bg_quantum.png',
+  'assets/images/bg_cosmic.png',
+  'assets/images/bg_omniversal.png',
+];

@@ -52,6 +52,7 @@ Inspired by **Egg, Inc.** and **Universal Paperclips**, Tap Tap Chef balances a 
 - Light 3D or illustrated sprites with soft color palettes
 - Minimalist UI with Egg Inc–style bounce and clarity
 - Expressive, humorous character animations (chefs, customers, aliens)
+- Milestone locations use unique background art to show your expansion
 
 ---
 
