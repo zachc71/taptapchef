@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'prestige.dart';
 import 'franchise_location.dart';
 import 'prestige_upgrade.dart';
+import '../constants/milestones.dart';
 
 class GameState extends ChangeNotifier {
   int mealsServed;
@@ -20,6 +21,10 @@ class GameState extends ChangeNotifier {
   FranchiseLocation get currentLocation => franchiseLocationSets[
           locationSetIndex % franchiseLocationSets.length]
       [locationTierIndex];
+
+  /// Background image associated with the current milestone.
+  String get currentBackground =>
+      milestoneBackgrounds[milestoneIndex];
 
   GameState({this.mealsServed = 0, this.milestoneIndex = 0, Prestige? prestige})
       : prestige = prestige ?? Prestige();

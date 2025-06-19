@@ -39,12 +39,25 @@ class KitchenScreen extends StatelessWidget {
     final availableStaff =
         staffByTier[controller.game.milestoneIndex] ?? {};
 
-    return Column(
+    return Stack(
       children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: Row(
+        Positioned.fill(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            child: Image.asset(
+              controller.game.currentBackground,
+              key: ValueKey(controller.game.currentBackground),
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+            ),
+          ),
+        ),
+        Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -138,6 +151,7 @@ class KitchenScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ],
+  );
   }
 }
