@@ -14,8 +14,6 @@ import 'providers/game_controller_provider.dart';
 import 'widgets/offline_earnings_dialog.dart';
 import 'widgets/ad_reward_sheet.dart';
 import 'widgets/prestige_sheet.dart';
-import 'widgets/upgrade_panel.dart';
-import 'widgets/staff_panel.dart';
 import 'screens/kitchen_screen.dart';
 import 'screens/upgrades_screen.dart';
 import 'screens/prestige_screen.dart';
@@ -24,14 +22,7 @@ import 'widgets/mini_game_dialog.dart';
 import 'widgets/frenzy_overlay.dart';
 import 'widgets/milestone_overlay.dart';
 import 'widgets/tutorial_overlay.dart';
-import 'models/franchise_location.dart';
-import 'widgets/franchise_hq.dart';
-import 'widgets/artifact_pantry.dart';
-import 'widgets/progression_sheet.dart';
 import 'constants/milestones.dart';
-import 'constants/panels.dart';
-import 'models/game_state.dart';
-import 'util/format.dart';
 import 'services/effect_service.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
@@ -335,6 +326,41 @@ class _CounterPageState extends ConsumerState<CounterPage>
     controller.startRipMode();
   }
 
+  Widget _currentScreen() {
+    switch (_navIndex) {
+      case 0:
+        return KitchenScreen(
+          key: const ValueKey('kitchen'),
+          controller: controller,
+          hireStaff: _hireStaff,
+          purchaseUpgrade: _purchase,
+          onAdReward: _showAdRewardSheet,
+          onPantry: () {},
+          onSettings: _showSettings,
+          frenzyOffset: _frenzyOffset,
+        );
+      case 1:
+        return UpgradesScreen(
+          key: const ValueKey('upgrades'),
+          controller: controller,
+          onPurchase: _purchase,
+          onHire: _hireStaff,
+        );
+      case 2:
+        return PrestigeScreen(
+          key: const ValueKey('prestige'),
+          controller: controller,
+          onConfirmDeal: _confirmFranchiseDeal,
+        );
+      default:
+        return BoostsScreen(
+          key: const ValueKey('boosts'),
+          controller: controller,
+          watchAd: controller.watchAd,
+        );
+    }
+  }
+
   @override
   void dispose() {
     controller.removeListener(_controllerListener);
@@ -345,44 +371,21 @@ class _CounterPageState extends ConsumerState<CounterPage>
 
   @override
   Widget build(BuildContext context) {
-    final bool finalStage = controller.game.atFinalMilestone;
-    final int goal =
-        finalStage ? 0 : controller.game.currentMilestoneGoal;
-    final double progress =
-        finalStage ? 1 : controller.game.mealsServed / goal;
-    final String nextName = finalStage
-        ? 'Completed'
-        : GameState.milestones[controller.game.milestoneIndex + 1];
-
-
     return Scaffold(
         body: Stack(
           children: [
-            IndexedStack(
-              index: _navIndex,
-              children: [
-                KitchenScreen(
-                  controller: controller,
-                  hireStaff: _hireStaff,
-                  purchaseUpgrade: _purchase,
-                  onAdReward: _showAdRewardSheet,
-                  onPantry: () {},
-                  onSettings: _showSettings,
-                ),
-                UpgradesScreen(
-                  controller: controller,
-                  onPurchase: _purchase,
-                  onHire: _hireStaff,
-                ),
-                PrestigeScreen(
-                  controller: controller,
-                  onConfirmDeal: _confirmFranchiseDeal,
-                ),
-                BoostsScreen(
-                  controller: controller,
-                  watchAd: controller.watchAd,
-                ),
-              ],
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                final offset = Tween<Offset>(
+                        begin: const Offset(0.05, 0), end: Offset.zero)
+                    .animate(animation);
+                return FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(position: offset, child: child),
+                );
+              },
+              child: _currentScreen(),
             ),
             if (controller.specialVisible)
               Positioned(

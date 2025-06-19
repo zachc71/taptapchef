@@ -16,6 +16,7 @@ class KitchenScreen extends StatelessWidget {
   final VoidCallback onAdReward;
   final VoidCallback onPantry;
   final VoidCallback onSettings;
+  final Offset frenzyOffset;
 
   const KitchenScreen({
     super.key,
@@ -25,6 +26,7 @@ class KitchenScreen extends StatelessWidget {
     required this.onAdReward,
     required this.onPantry,
     required this.onSettings,
+    this.frenzyOffset = Offset.zero,
   });
 
   @override
@@ -113,9 +115,12 @@ class KitchenScreen extends StatelessWidget {
                 Text('Income per Tap: ${controller.perTap}'),
             const SizedBox(height: 16),
             Center(
-              child: ElevatedButton(
-                onPressed: controller.cook,
-                child: const Text('Cook!'),
+              child: Transform.translate(
+                offset: frenzyOffset,
+                child: ElevatedButton(
+                  onPressed: controller.cook,
+                  child: const Text('Cook!'),
+                ),
               ),
             ),
             const SizedBox(height: 8),
