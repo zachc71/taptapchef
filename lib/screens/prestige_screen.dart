@@ -18,9 +18,10 @@ class PrestigeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final canDeal = controller.game.atFinalMilestone;
     final tokens = 1 + (controller.game.mealsServed ~/ 1000);
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -74,6 +75,6 @@ class PrestigeScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }
