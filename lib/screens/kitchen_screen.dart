@@ -158,7 +158,7 @@ class KitchenScreen extends StatelessWidget {
           ],
         ),
       ),
-    ],
-  );
+        )],
+    )]);
   }
 }

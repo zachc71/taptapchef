@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:taptapchef/models/franchise_location.dart';
 
 import 'models/staff.dart';
 import 'models/upgrade.dart';
@@ -13,7 +14,6 @@ import 'controllers/game_controller.dart';
 import 'providers/game_controller_provider.dart';
 import 'widgets/offline_earnings_dialog.dart';
 import 'widgets/ad_reward_sheet.dart';
-import 'widgets/prestige_sheet.dart';
 import 'screens/kitchen_screen.dart';
 import 'screens/upgrades_screen.dart';
 import 'screens/prestige_screen.dart';
@@ -24,7 +24,6 @@ import 'widgets/milestone_overlay.dart';
 import 'widgets/tutorial_overlay.dart';
 import 'constants/milestones.dart';
 import 'constants/theme.dart';
-import 'services/effect_service.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
 
@@ -51,7 +50,6 @@ class CounterPage extends ConsumerStatefulWidget {
 class _CounterPageState extends ConsumerState<CounterPage>
     with SingleTickerProviderStateMixin {
   late final GameController controller;
-  late EffectService _effectService;
   late final AnimationController _frenzyController;
   Offset _frenzyOffset = Offset.zero;
   int _prevMilestone = 0;
@@ -61,7 +59,6 @@ class _CounterPageState extends ConsumerState<CounterPage>
   void initState() {
     super.initState();
     controller = ref.read(gameControllerProvider);
-    _effectService = EffectService(controller.game);
     _frenzyController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -133,10 +130,6 @@ class _CounterPageState extends ConsumerState<CounterPage>
     controller.hireStaff(type, quantity);
   }
 
-  void _cook() {
-    HapticFeedback.lightImpact();
-    controller.cook();
-  }
 
   void _purchase(Upgrade upgrade, int quantity) {
     HapticFeedback.mediumImpact();
@@ -173,6 +166,7 @@ class _CounterPageState extends ConsumerState<CounterPage>
             onDouble: () async {
               final doubled = await controller.watchAd();
               if (doubled) controller.addCoins(earned);
+              // ignore: use_build_context_synchronously
               if (mounted) Navigator.pop(context);
             },
           ),
@@ -218,7 +212,7 @@ class _CounterPageState extends ConsumerState<CounterPage>
         context: context,
         builder: (_) => AlertDialog(
           title: const Text('Feature Unlocked'),
-          content: Text(message),
+          content: Text(message!),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),

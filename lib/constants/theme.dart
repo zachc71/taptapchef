@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 final ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
   useMaterial3: true,
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     elevation: 2,
   ),

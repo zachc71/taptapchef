@@ -97,7 +97,7 @@ class StaffPanel extends StatelessWidget {
               ),
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }

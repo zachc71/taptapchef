@@ -19,7 +19,7 @@ class GameState extends ChangeNotifier {
       (milestoneIndex * locations.franchiseTiers.length) ~/
           GameState.milestones.length;
 
-  FranchiseLocation get currentLocation => locations.franchiseLocationSets[
+  locations.FranchiseLocation get currentLocation => locations.franchiseLocationSets[
           locationSetIndex % locations.franchiseLocationSets.length]
       [locationTierIndex];
 

@@ -108,6 +108,6 @@ class _MilestoneOverlayState extends State<MilestoneOverlay>
           ),
         ),
       ),
-    );
+    ));
   }
 }
