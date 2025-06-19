@@ -46,8 +46,9 @@ class _BoostsScreenState extends State<BoostsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
+    return SafeArea(
+      child: Column(
+        children: [
         TabBar(
           controller: _tabController,
           tabs: const [
@@ -77,6 +78,6 @@ class _BoostsScreenState extends State<BoostsScreen>
           ),
         ),
       ],
-    );
+    ));
   }
 }

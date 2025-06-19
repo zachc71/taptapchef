@@ -53,12 +53,13 @@ class KitchenScreen extends StatelessWidget {
             ),
           ),
         ),
-        Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: Row(
+        SafeArea(
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -92,15 +93,15 @@ class KitchenScreen extends StatelessWidget {
                 icon: const Icon(Icons.settings),
                 onPressed: onSettings,
               ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+                ],
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 Text('Current Location: ${controller.game.currentLocation.name}',
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold)),
@@ -152,7 +153,10 @@ class KitchenScreen extends StatelessWidget {
           ],
         ),
       ),
-        )],
-    )]);
+    ],
+  ),
+),
+      ],
+    );
   }
 }
