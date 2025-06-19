@@ -15,7 +15,6 @@ class KitchenScreen extends StatelessWidget {
   final void Function(Upgrade, int) purchaseUpgrade;
   final void Function(StaffType, int) hireStaff;
   final VoidCallback onAdReward;
-  final VoidCallback onPantry;
   final VoidCallback onSettings;
   final Offset frenzyOffset;
 
@@ -25,7 +24,6 @@ class KitchenScreen extends StatelessWidget {
     required this.hireStaff,
     required this.purchaseUpgrade,
     required this.onAdReward,
-    required this.onPantry,
     required this.onSettings,
     this.frenzyOffset = Offset.zero,
   });
@@ -151,10 +149,6 @@ class KitchenScreen extends StatelessWidget {
               child: const Text('Watch Ad for Rewards'),
             ),
             const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: onPantry,
-              child: const Text('The Pantry'),
-            ),
           ],
         ),
       ),

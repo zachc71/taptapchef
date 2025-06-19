@@ -14,7 +14,6 @@ import 'providers/game_controller_provider.dart';
 import 'widgets/offline_earnings_dialog.dart';
 import 'widgets/ad_reward_sheet.dart';
 import 'screens/kitchen_screen.dart';
-import 'screens/upgrades_screen.dart';
 import 'screens/prestige_screen.dart';
 import 'screens/boosts_screen.dart';
 import 'widgets/mini_game_dialog.dart';
@@ -200,10 +199,10 @@ class _CounterPageState extends ConsumerState<CounterPage>
     int? tab;
     if (index == 1) {
       message = 'New Feature Unlocked: Hire Staff!';
-      tab = 1; // Upgrades screen
+      tab = 0; // Kitchen screen
     } else if (index == 3) {
       message = 'New Feature Unlocked: Prestige!';
-      tab = 2; // Prestige screen
+      tab = 1; // Prestige screen
     }
     if (message != null) {
       setState(() => _navIndex = tab!);
@@ -330,18 +329,10 @@ class _CounterPageState extends ConsumerState<CounterPage>
           hireStaff: _hireStaff,
           purchaseUpgrade: _purchase,
           onAdReward: _showAdRewardSheet,
-          onPantry: () {},
           onSettings: _showSettings,
           frenzyOffset: _frenzyOffset,
         );
       case 1:
-        return UpgradesScreen(
-          key: const ValueKey('upgrades'),
-          controller: controller,
-          onPurchase: _purchase,
-          onHire: _hireStaff,
-        );
-      case 2:
         return PrestigeScreen(
           key: const ValueKey('prestige'),
           controller: controller,
@@ -416,27 +407,6 @@ class _CounterPageState extends ConsumerState<CounterPage>
           items: [
             const BottomNavigationBarItem(
                 icon: Icon(Icons.local_fire_department), label: "Kitchen"),
-            BottomNavigationBarItem(
-              icon: Stack(
-                children: [
-                  const Icon(Icons.arrow_upward),
-                  if (controller.anyPurchasesAffordable)
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              label: "Upgrades",
-            ),
             const BottomNavigationBarItem(
                 icon: Icon(Icons.star_border), label: "Prestige"),
             const BottomNavigationBarItem(
