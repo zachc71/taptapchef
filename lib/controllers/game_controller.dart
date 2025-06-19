@@ -5,20 +5,17 @@ import '../models/game_state.dart';
 import '../models/staff.dart';
 import '../models/upgrade.dart';
 import '../services/storage.dart';
-import 'effect_engine.dart';
 import '../models/artifact.dart';
 import '../services/effect_service.dart';
 
 class GameController extends ChangeNotifier {
   final GameState game;
   final StorageService _storage;
-  late final EffectEngine effects;
   late final EffectService effectService;
 
   GameController({GameState? state, StorageService? storage})
       : game = state ?? GameState(),
         _storage = storage ?? StorageService() {
-    effects = EffectEngine(game);
     effectService = EffectService(game);
     upgrades = upgradesForTier(game.milestoneIndex);
   }
