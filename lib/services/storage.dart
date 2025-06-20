@@ -155,17 +155,9 @@ class StorageService {
   /// Clears all saved progress so the game starts fresh.
   Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_keyCount);
-    await prefs.remove(_keyTimestamp);
-    await prefs.remove(_keyTokens);
-    await prefs.remove(_keyLocation);
-    await prefs.remove(_keyUpgrades);
-    await prefs.remove(_keyCoins);
-    await prefs.remove(_keyPerTap);
-    await prefs.remove(_keyStaff);
-    await prefs.remove(_keyOwnedUpgrades);
-    await prefs.remove(_keyOwnedArtifacts);
-    await prefs.remove(_keyEquippedArtifacts);
-    await prefs.remove(_keyTutorial);
+    // Clear all persisted values to ensure a truly fresh start. This is
+    // simpler and less error-prone than removing keys individually in case
+    // new preferences are added later.
+    await prefs.clear();
   }
 }
