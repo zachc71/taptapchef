@@ -390,6 +390,7 @@ class GameController extends ChangeNotifier {
     ripTimer?.cancel();
     ripTimer = null;
     notifyListeners();
+    await save();
   }
 
   @override
