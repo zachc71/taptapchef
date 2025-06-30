@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../models/staff.dart';
 import 'pulse.dart';
@@ -27,12 +28,20 @@ class StaffPanel extends StatelessWidget {
       children: [
         Text(title, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
+        int costFor(Staff s, int owned, int qty) {
+          double total = 0;
+          for (int i = 0; i < qty; i++) {
+            total += s.baseCost * pow(1.15, owned + i);
+          }
+          return total.ceil();
+        }
         ...staff.keys.map((type) {
           final s = staff[type]!;
           final owned = hired[type] ?? 0;
-          final bool affordable = coins >= s.cost;
-          final bool affordable10 = coins >= s.cost * 10;
-          final bool affordable100 = coins >= s.cost * 100;
+          final int cost = costFor(s, owned, 1);
+          final bool affordable = coins >= cost;
+          final bool affordable10 = coins >= costFor(s, owned, 10);
+          final bool affordable100 = coins >= costFor(s, owned, 100);
           final bool highlightCard = affordable10 || affordable100;
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 4),
@@ -56,7 +65,7 @@ class StaffPanel extends StatelessWidget {
                     children: [
                       const Icon(Icons.attach_money, size: 16),
                       const SizedBox(width: 4),
-                      Text(formatNumber(s.cost)),
+                      Text(formatNumber(cost)),
                       const SizedBox(width: 12),
                       const Icon(Icons.timer, size: 16),
                       const SizedBox(width: 4),

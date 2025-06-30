@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../models/upgrade.dart';
 import 'pulse.dart';
@@ -23,10 +24,18 @@ class UpgradePanel extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(title, style: Theme.of(context).textTheme.titleLarge),
       const SizedBox(height: 8),
+      int costFor(Upgrade u, int qty) {
+        double total = 0;
+        for (int i = 0; i < qty; i++) {
+          total += u.baseCost * pow(1.15, u.owned + i);
+        }
+        return total.ceil();
+      }
       ...upgrades.map((u) {
-        final bool affordable = currency >= u.cost;
-        final bool affordable10 = currency >= u.cost * 10;
-        final bool affordable100 = currency >= u.cost * 100;
+        final int cost = costFor(u, 1);
+        final bool affordable = currency >= cost;
+        final bool affordable10 = currency >= costFor(u, 10);
+        final bool affordable100 = currency >= costFor(u, 100);
         final bool highlightCard = affordable10 || affordable100;
         final card = Card(
           margin: const EdgeInsets.symmetric(vertical: 4),
@@ -50,7 +59,7 @@ class UpgradePanel extends StatelessWidget {
                   children: [
                     const Icon(Icons.attach_money, size: 16),
                     const SizedBox(width: 4),
-                    Text(formatNumber(u.cost)),
+                    Text(formatNumber(cost)),
                     const SizedBox(width: 12),
                     const Icon(Icons.upgrade, size: 16),
                     const SizedBox(width: 4),

@@ -11,7 +11,6 @@ import 'models/staff.dart';
 import 'models/upgrade.dart';
 import 'controllers/game_controller.dart';
 import 'providers/game_controller_provider.dart';
-import 'widgets/offline_earnings_dialog.dart';
 import 'widgets/ad_reward_sheet.dart';
 import 'screens/kitchen_screen.dart';
 import 'screens/management_screen.dart';
@@ -71,10 +70,7 @@ class _CounterPageState extends ConsumerState<CounterPage>
           });
         }
       });
-    controller.load().then((result) async {
-      if (result.earned > 0) {
-        await _showOfflineEarningsDialog(result.earned);
-      }
+    controller.load().then((_) async {
       if (!controller.tutorialComplete) {
         await _showTutorial();
       }
@@ -146,33 +142,6 @@ class _CounterPageState extends ConsumerState<CounterPage>
     await controller.rewardSpecial(taps);
   }
 
-  Future<void> _showOfflineEarningsDialog(int earned) async {
-    HapticFeedback.selectionClick();
-    await showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'offline',
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return ScaleTransition(
-          scale: CurvedAnimation(
-            parent: animation,
-            curve: Curves.elasticOut,
-          ),
-          child: OfflineEarningsDialog(
-            earned: earned,
-            onClose: () => Navigator.pop(context),
-            onDouble: () async {
-              final doubled = await controller.watchAd();
-              if (doubled) controller.addCoins(earned);
-              // ignore: use_build_context_synchronously
-              if (mounted) Navigator.pop(context);
-            },
-          ),
-        );
-      },
-    );
-  }
 
   Future<void> _showTutorial() async {
     await showGeneralDialog(

@@ -5,30 +5,26 @@ import 'package:taptapchef/services/storage.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('loadGame applies idle earnings', () async {
-    final now = DateTime.now();
+  test('loadGame restores saved values', () async {
     SharedPreferences.setMockInitialValues({
-      'count': 100,
-      'timestamp': now.subtract(const Duration(seconds: 10)).millisecondsSinceEpoch,
+      'count': 42,
+      'milestoneIndex': 3,
     });
 
     final service = StorageService();
-    final result = await service.loadGame(idleMultiplier: 1.0);
+    final result = await service.loadGame();
 
-    expect(result.earned, 10);
-    expect(result.count, 110);
-
-    final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getInt('count'), 110);
+    expect(result.count, 42);
+    expect(result.milestoneIndex, 3);
   });
 
   test('loadGame with no saved data returns zeros', () async {
     SharedPreferences.setMockInitialValues({});
 
     final service = StorageService();
-    final result = await service.loadGame(idleMultiplier: 1.0);
+    final result = await service.loadGame();
 
-    expect(result.earned, 0);
     expect(result.count, 0);
+    expect(result.milestoneIndex, 0);
   });
 }
