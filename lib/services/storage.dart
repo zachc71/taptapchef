@@ -3,10 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/game_state.dart';
 import '../models/staff.dart';
 
-class OfflineLoadResult {
+class GameLoadResult {
   final int count;
-  final int earned;
-  OfflineLoadResult(this.count, this.earned);
+  final int milestoneIndex;
+  GameLoadResult(this.count, this.milestoneIndex);
 }
 
 class PlayerData {
@@ -31,7 +31,7 @@ class PlayerData {
 
 class StorageService {
   static const _keyCount = 'count';
-  static const _keyTimestamp = 'timestamp';
+  static const _keyMilestone = 'milestoneIndex';
   static const _keyTokens = 'franchiseTokens';
   static const _keyLocation = 'locationSetIndex';
   static const _keyUpgrades = 'purchasedPrestigeUpgrades';
@@ -43,11 +43,11 @@ class StorageService {
   static const _keyEquippedArtifacts = 'equippedArtifacts';
   static const _keyTutorial = 'tutorialComplete';
 
-  /// Saves the current count and timestamp to local storage.
-  Future<void> saveGame(int count) async {
+  /// Saves the current count and milestone index to local storage.
+  Future<void> saveGame(int count, int milestoneIndex) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_keyCount, count);
-    await prefs.setInt(_keyTimestamp, DateTime.now().millisecondsSinceEpoch);
+    await prefs.setInt(_keyMilestone, milestoneIndex);
   }
 
   Future<void> saveFranchiseData(GameState game) async {
@@ -129,27 +129,12 @@ class StorageService {
         tutorialComplete: tutorialComplete);
   }
 
-  /// Loads the saved count and applies idle earnings based on the time elapsed.
-  /// [idleMultiplier] determines how many meals are earned per second while offline.
-  Future<OfflineLoadResult> loadGame({double idleMultiplier = 1.0}) async {
+  /// Loads the saved count and milestone index from local storage.
+  Future<GameLoadResult> loadGame() async {
     final prefs = await SharedPreferences.getInstance();
     final savedCount = prefs.getInt(_keyCount) ?? 0;
-    final timestamp = prefs.getInt(_keyTimestamp);
-    int newCount = savedCount;
-    int earned = 0;
-
-    if (timestamp != null) {
-      final last = DateTime.fromMillisecondsSinceEpoch(timestamp);
-      final elapsed = DateTime.now().difference(last).inSeconds;
-      earned = (elapsed * idleMultiplier).floor();
-      newCount += earned;
-    }
-
-    // Persist the updated count and timestamp so idle earnings aren't
-    // repeatedly added on subsequent loads.
-    await prefs.setInt(_keyCount, newCount);
-    await prefs.setInt(_keyTimestamp, DateTime.now().millisecondsSinceEpoch);
-    return OfflineLoadResult(newCount, earned);
+    final milestone = prefs.getInt(_keyMilestone) ?? 0;
+    return GameLoadResult(savedCount, milestone);
   }
 
   /// Clears all saved progress so the game starts fresh.

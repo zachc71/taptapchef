@@ -67,14 +67,15 @@ class GameController extends ChangeNotifier {
       return true;
     }
     final availableStaff = staffByTier[game.milestoneIndex] ?? {};
-    for (final s in availableStaff.values) {
-      if (coins >= s.cost) return true;
+    for (final entry in availableStaff.entries) {
+      final owned = hiredStaff[entry.key] ?? 0;
+      if (coins >= entry.value.costFor(owned)) return true;
     }
     return false;
   }
 
-  Future<OfflineLoadResult> load() async {
-    final result = await _storage.loadGame(idleMultiplier: 0.000833);
+  Future<void> load() async {
+    final result = await _storage.loadGame();
     final player = await _storage.loadPlayerData();
     coins = player.coins;
     perTap = player.perTap;
@@ -88,13 +89,10 @@ class GameController extends ChangeNotifier {
     game.ownedArtifactIds = List.from(player.ownedArtifacts);
     game.equippedArtifactIds = List.from(player.equippedArtifacts);
     game.mealsServed = result.count;
-    final adjustedEarned =
-        (result.earned * effectService.offlineEarningsMultiplier).toInt();
-    coins += adjustedEarned;
+    game.milestoneIndex = result.milestoneIndex;
     _lastMilestoneIndex = game.milestoneIndex;
     await _storage.loadFranchiseData(game);
     notifyListeners();
-    return OfflineLoadResult(result.count, adjustedEarned);
   }
 
   void start() {
@@ -106,7 +104,7 @@ class GameController extends ChangeNotifier {
   }
 
   Future<void> save() async {
-    await _storage.saveGame(game.mealsServed);
+    await _storage.saveGame(game.mealsServed, game.milestoneIndex);
     await _storage.saveFranchiseData(game);
     await _storage.savePlayerData(
       coins: coins,
@@ -137,8 +135,12 @@ class GameController extends ChangeNotifier {
 
   void purchase(Upgrade upgrade, int quantity) {
     if (quantity <= 0) return;
-    final costPer = upgrade.cost.toDouble() * effectService.upgradeCostMultiplier;
-    final int totalCost = (costPer * quantity).ceil();
+    double cost = 0;
+    for (int i = 0; i < quantity; i++) {
+      cost += upgrade.baseCost * pow(1.15, upgrade.owned + i);
+    }
+    cost *= effectService.upgradeCostMultiplier;
+    final int totalCost = cost.ceil();
     if (coins >= totalCost) {
       coins -= totalCost;
       perTap += upgrade.effect * quantity;
@@ -179,11 +181,16 @@ class GameController extends ChangeNotifier {
 
   void hireStaff(StaffType type, int quantity) {
     final staff = staffOptions[type]!;
-    final costPer = staff.cost.toDouble() * effectService.staffCostMultiplier;
-    final int totalCost = (costPer * quantity).ceil();
+    final owned = hiredStaff[type] ?? 0;
+    double cost = 0;
+    for (int i = 0; i < quantity; i++) {
+      cost += staff.baseCost * pow(1.15, owned + i);
+    }
+    cost *= effectService.staffCostMultiplier;
+    final int totalCost = cost.ceil();
     if (coins >= totalCost) {
       coins -= totalCost;
-      hiredStaff[type] = (hiredStaff[type] ?? 0) + quantity;
+      hiredStaff[type] = owned + quantity;
       notifyListeners();
     }
   }

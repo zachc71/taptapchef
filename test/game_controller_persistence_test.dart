@@ -11,6 +11,8 @@ void main() {
     final controller = GameController();
     controller.coins = 42;
     controller.perTap = 3;
+    controller.game.milestoneIndex = 2;
+    controller.game.mealsServed = 5;
     controller.hiredStaff[StaffType.tacoFlipper] = 2;
     controller.upgrades.first.owned = 1;
     await controller.save();
@@ -22,6 +24,8 @@ void main() {
     expect(controller2.perTap, 3);
     expect(controller2.hiredStaff[StaffType.tacoFlipper], 2);
     expect(controller2.upgrades.first.owned, 1);
+    expect(controller2.game.milestoneIndex, 2);
+    expect(controller2.game.mealsServed, 5);
   });
 
   test('rewardSpecial persists coin reward', () async {

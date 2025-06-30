@@ -1,3 +1,5 @@
+import 'dart:math';
+
 enum StaffType {
   tacoFlipper,
   flyerHandout,
@@ -19,46 +21,48 @@ enum StaffType {
 
 class Staff {
   final String name;
-  final int cost;
+  final int baseCost;
   final double tapsPerSecond;
 
   const Staff(
-      {required this.name, required this.cost, required this.tapsPerSecond});
+      {required this.name, required this.baseCost, required this.tapsPerSecond});
+
+  int costFor(int owned) => (baseCost * pow(1.15, owned)).ceil();
 }
 
 // Individual staff definitions so they can be reused across tier maps.
 const Staff _tacoFlipper =
-    Staff(name: 'Taco Flipper', cost: 250, tapsPerSecond: 0.6);
+    Staff(name: 'Taco Flipper', baseCost: 250, tapsPerSecond: 0.6);
 const Staff _flyerHandout =
-    Staff(name: 'Flyer Handout Person', cost: 375, tapsPerSecond: 0.2);
+    Staff(name: 'Flyer Handout Person', baseCost: 375, tapsPerSecond: 0.2);
 const Staff _waitressOnSkates =
-    Staff(name: 'Waitress on Skates', cost: 2000, tapsPerSecond: 3.0);
+    Staff(name: 'Waitress on Skates', baseCost: 2000, tapsPerSecond: 3.0);
 const Staff _grumpyCook =
-    Staff(name: 'Grumpy but Efficient Cook', cost: 4000, tapsPerSecond: 6.0);
+    Staff(name: 'Grumpy but Efficient Cook', baseCost: 4000, tapsPerSecond: 6.0);
 const Staff _shiftManager =
-    Staff(name: 'Shift Manager', cost: 10000, tapsPerSecond: 10.0);
+    Staff(name: 'Shift Manager', baseCost: 10000, tapsPerSecond: 10.0);
 const Staff _marketingIntern =
-    Staff(name: 'Marketing Intern', cost: 17500, tapsPerSecond: 2.0);
+    Staff(name: 'Marketing Intern', baseCost: 17500, tapsPerSecond: 2.0);
 const Staff _corporateConsultant =
-    Staff(name: 'Corporate Consultant', cost: 25000, tapsPerSecond: 12.0);
+    Staff(name: 'Corporate Consultant', baseCost: 25000, tapsPerSecond: 12.0);
 const Staff _brandAmbassador =
-    Staff(name: 'Brand Ambassador', cost: 37500, tapsPerSecond: 16.0);
+    Staff(name: 'Brand Ambassador', baseCost: 37500, tapsPerSecond: 16.0);
 const Staff _alienSousChef =
-    Staff(name: 'Alien Sous Chef', cost: 75000, tapsPerSecond: 24.0);
+    Staff(name: 'Alien Sous Chef', baseCost: 75000, tapsPerSecond: 24.0);
 const Staff _robotServer =
-    Staff(name: 'Robot Server', cost: 125000, tapsPerSecond: 30.0);
+    Staff(name: 'Robot Server', baseCost: 125000, tapsPerSecond: 30.0);
 const Staff _aiHost =
-    Staff(name: 'AI Host', cost: 200000, tapsPerSecond: 40.0);
+    Staff(name: 'AI Host', baseCost: 200000, tapsPerSecond: 40.0);
 const Staff _quantumCook =
-    Staff(name: 'Quantum Cook', cost: 300000, tapsPerSecond: 50.0);
+    Staff(name: 'Quantum Cook', baseCost: 300000, tapsPerSecond: 50.0);
 const Staff _chronoChef =
-    Staff(name: 'Chrono Chef', cost: 500000, tapsPerSecond: 60.0);
+    Staff(name: 'Chrono Chef', baseCost: 500000, tapsPerSecond: 60.0);
 const Staff _timeWaiter =
-    Staff(name: 'Time Waiter', cost: 750000, tapsPerSecond: 70.0);
+    Staff(name: 'Time Waiter', baseCost: 750000, tapsPerSecond: 70.0);
 const Staff _multiverseManager =
-    Staff(name: 'Multiverse Manager', cost: 1250000, tapsPerSecond: 90.0);
+    Staff(name: 'Multiverse Manager', baseCost: 1250000, tapsPerSecond: 90.0);
 const Staff _realityServer =
-    Staff(name: 'Reality Server', cost: 2000000, tapsPerSecond: 120.0);
+    Staff(name: 'Reality Server', baseCost: 2000000, tapsPerSecond: 120.0);
 
 /// Lookup for all staff by type regardless of tier.
 const Map<StaffType, Staff> staffOptions = {
