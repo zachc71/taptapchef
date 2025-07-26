@@ -2,6 +2,12 @@ import 'package:taptapchef/models/game_state.dart';
 import 'package:taptapchef/models/artifact.dart';
 
 /// Centralized calculation service for game effects.
+///
+/// In addition to the existing multipliers, this version adds support for
+/// golden meal mechanics via the [goldenMealChance] and
+/// [goldenMealMultiplier] getters. These values can be tuned by assigning
+/// appropriate `ArtifactEffectType` enums to artifacts (e.g.
+/// `goldenMealChance` and `goldenMealMultiplier`).
 class EffectService {
   final GameState gameState;
 
@@ -100,5 +106,40 @@ class EffectService {
     }
     return multiplier;
   }
-}
 
+  /// The chance that a golden meal will spawn during a special event.
+  ///
+  /// Base spawn chance should be defined in the game logic; this getter
+  /// contributes additive bonuses from equipped artifacts. For example,
+  /// equipping an artifact with `goldenMealChance` of 0.005 would increase
+  /// the spawn probability by 0.5 percentage points. The final spawn chance
+  /// returned here can then be added to the base chance in the game controller.
+  double get goldenMealChance {
+    double additiveChance = 0.0;
+    for (final artifact in _equippedArtifacts) {
+      for (final effect in [artifact.bonus, artifact.drawback]) {
+        if (effect.type == ArtifactEffectType.goldenMealChance) {
+          additiveChance += effect.value;
+        }
+      }
+    }
+    return additiveChance;
+  }
+
+  /// The multiplier applied to golden meal rewards.
+  ///
+  /// Golden meals grant a large chunk of coins when tapped. This getter
+  /// aggregates multiplicative bonuses from artifacts. If two artifacts each
+  /// provide a 1.5× golden meal multiplier, the total becomes 2.25×.
+  double get goldenMealMultiplier {
+    double multiplier = 1.0;
+    for (final artifact in _equippedArtifacts) {
+      for (final effect in [artifact.bonus, artifact.drawback]) {
+        if (effect.type == ArtifactEffectType.goldenMealMultiplier) {
+          multiplier *= effect.value;
+        }
+      }
+    }
+    return multiplier;
+  }
+}
