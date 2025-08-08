@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
-import '../services/effect_service.dart';
 import '../models/game_state.dart';
 import '../services/storage.dart';
 import 'game_controller.dart' as base;

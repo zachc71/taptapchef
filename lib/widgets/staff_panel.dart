@@ -21,6 +21,14 @@ class StaffPanel extends StatelessWidget {
     required this.title,
   });
 
+  int costFor(Staff s, int owned, int qty) {
+    double total = 0;
+    for (int i = 0; i < qty; i++) {
+      total += s.baseCost * pow(1.15, owned + i);
+    }
+    return total.ceil();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,13 +36,6 @@ class StaffPanel extends StatelessWidget {
       children: [
         Text(title, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
-        int costFor(Staff s, int owned, int qty) {
-          double total = 0;
-          for (int i = 0; i < qty; i++) {
-            total += s.baseCost * pow(1.15, owned + i);
-          }
-          return total.ceil();
-        }
         ...staff.keys.map((type) {
           final s = staff[type]!;
           final owned = hired[type] ?? 0;

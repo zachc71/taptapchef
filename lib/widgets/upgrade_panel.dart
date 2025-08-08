@@ -19,18 +19,19 @@ class UpgradePanel extends StatelessWidget {
     required this.title,
   });
 
+  int costFor(Upgrade u, int qty) {
+    double total = 0;
+    for (int i = 0; i < qty; i++) {
+      total += u.baseCost * pow(1.15, u.owned + i);
+    }
+    return total.ceil();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(title, style: Theme.of(context).textTheme.titleLarge),
       const SizedBox(height: 8),
-      int costFor(Upgrade u, int qty) {
-        double total = 0;
-        for (int i = 0; i < qty; i++) {
-          total += u.baseCost * pow(1.15, u.owned + i);
-        }
-        return total.ceil();
-      }
       ...upgrades.map((u) {
         final int cost = costFor(u, 1);
         final bool affordable = currency >= cost;

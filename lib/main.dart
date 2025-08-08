@@ -379,14 +379,14 @@ class _CounterPageState extends ConsumerState<CounterPage>
           onTap: (i) => setState(() => _navIndex = i),
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.black,
-          items: [
-            const BottomNavigationBarItem(
+          items: const [
+            BottomNavigationBarItem(
                 icon: Icon(Icons.local_fire_department), label: "Kitchen"),
-            const BottomNavigationBarItem(
+            BottomNavigationBarItem(
                 icon: Icon(Icons.store), label: "Manage"),
-            const BottomNavigationBarItem(
+            BottomNavigationBarItem(
                 icon: Icon(Icons.star_border), label: "Prestige"),
-            const BottomNavigationBarItem(
+            BottomNavigationBarItem(
                 icon: Icon(Icons.rocket_launch), label: "Boosts"),
           ],
         ));
