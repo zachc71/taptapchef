@@ -99,8 +99,7 @@ class GameController extends ChangeNotifier {
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tickPassive());
     _specialTimer =
         Timer.periodic(const Duration(seconds: 20), (_) => _spawnSpecial());
-    _autosaveTimer =
-        Timer.periodic(autosaveInterval, (_) => save());
+    _autosaveTimer = Timer.periodic(autosaveInterval, (_) => save());
   }
 
   Future<void> save() async {
@@ -408,7 +407,7 @@ class GameController extends ChangeNotifier {
     _specialTimer?.cancel();
     _autosaveTimer?.cancel();
     adBoostTimer?.cancel();
-    save();
+    unawaited(save());
     super.dispose();
   }
 }
